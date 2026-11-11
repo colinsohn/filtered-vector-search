@@ -698,6 +698,65 @@ func TestServerBoundedConcurrencyAndLoad(t *testing.T) {
 	}
 }
 
+func TestPlannerTuningOnDevQueriesAndPublicCorpus(t *testing.T) {
+	wl, err := LoadPublicCovertypeWorkload(".cache", 42, 6000, 32, 70, 140)
+	if err != nil {
+		t.Fatalf("LoadPublicCovertypeWorkload failed: %v", err)
+	}
+	if wl.Dim != PublicCovertypeDim {
+		t.Fatalf("expected dim=%d, got %d", PublicCovertypeDim, wl.Dim)
+	}
+
+	engine, err := NewEngine(wl.Dim, wl.Docs, wl.NumClusters, 42)
+	if err != nil {
+		t.Fatalf("NewEngine failed: %v", err)
+	}
+
+	size1, cluster1, rep1, err := TunePlannersOnDevQueries(engine, wl.DevQueries, 10, 0.94)
+	if err != nil {
+		t.Fatalf("TunePlannersOnDevQueries failed: %v", err)
+	}
+	size2, cluster2, rep2, err := TunePlannersOnDevQueries(engine, wl.DevQueries, 10, 0.94)
+	if err != nil {
+		t.Fatalf("second TunePlannersOnDevQueries failed: %v", err)
+	}
+	if size1 != size2 || cluster1 != cluster2 || rep1 != rep2 {
+		t.Fatalf("expected deterministic tuning: %+v vs %+v", rep1, rep2)
+	}
+
+	heldTruth, err := ComputeExactGroundTruth(engine.Exact, wl.HeldOutQueries, 10)
+	if err != nil {
+		t.Fatalf("ComputeExactGroundTruth failed: %v", err)
+	}
+	ctx := context.Background()
+	sizeHeld, err := EvaluateMethod("size_only", wl.HeldOutQueries, heldTruth, 10, 0, 1,
+		func(q WorkloadQuery) ([]Result, Route, int, int, error) {
+			res, plan, eval, err := engine.Execute(ctx, size1, q.Vector, q.Category, 10)
+			return res, plan.Route, plan.NProbe, eval, err
+		})
+	if err != nil {
+		t.Fatalf("EvaluateMethod size_only failed: %v", err)
+	}
+	clusterHeld, err := EvaluateMethod("cluster_aware", wl.HeldOutQueries, heldTruth, 10, 0, 1,
+		func(q WorkloadQuery) ([]Result, Route, int, int, error) {
+			res, plan, eval, err := engine.Execute(ctx, cluster1, q.Vector, q.Category, 10)
+			return res, plan.Route, plan.NProbe, eval, err
+		})
+	if err != nil {
+		t.Fatalf("EvaluateMethod cluster_aware failed: %v", err)
+	}
+
+	t.Logf("UCI Covertype (N=6000) Dev Tuning -> Frozen SizeOnly(nprobe=%d, devRecall=%.4f) | Frozen ClusterAware(base=%d, max=%d, multK=%d, devRecall=%.4f)",
+		size1.BaseNProbe, rep1.SizeDevRecall, cluster1.BaseNProbe, cluster1.MaxNProbe, cluster1.TargetMultipleOfK, rep1.ClusterDevRecall)
+	t.Logf("UCI Covertype (N=6000) Held-Out   -> SizeOnly recall=%.4f (underfill=%.4f) | ClusterAware recall=%.4f (underfill=%.4f)",
+		sizeHeld.RecallAtK, sizeHeld.UnderfillRate, clusterHeld.RecallAtK, clusterHeld.UnderfillRate)
+
+	if clusterHeld.RecallAtK <= sizeHeld.RecallAtK {
+		t.Fatalf("expected cluster_aware held-out recall (%.4f) > size_only held-out recall (%.4f) on public corpus",
+			clusterHeld.RecallAtK, sizeHeld.RecallAtK)
+	}
+}
+
 func BenchmarkExactSearch(b *testing.B) {
 	wl := NewSeededWorkload(42, 10000, 100, 64)
 	idx, err := NewExactIndex(wl.Dim, wl.Docs)

@@ -88,14 +88,14 @@ func (e *Engine) Execute(ctx context.Context, planner Planner, query []float32, 
 // using only the total document count in the target category.
 type SizeOnlyPlanner struct {
 	// MaxExactSelectivity routes categories with (catDocs / totalDocs) <= threshold to exact scan.
-	MaxExactSelectivity float64
+	MaxExactSelectivity float64 `json:"max_exact_selectivity"`
 	// MaxExactDocs is a minimum floor on exact scan threshold for small corpora.
-	MaxExactDocs int
+	MaxExactDocs int `json:"max_exact_docs"`
 	// BaseNProbe is the fixed cluster probe budget used when routing to IVF.
-	BaseNProbe int
+	BaseNProbe int `json:"base_nprobe"`
 }
 
-// DefaultSizeOnlyPlanner returns the frozen size-only planner tuned on development queries.
+// DefaultSizeOnlyPlanner returns the default size-only planner baseline.
 func DefaultSizeOnlyPlanner() SizeOnlyPlanner {
 	return SizeOnlyPlanner{
 		MaxExactSelectivity: 0.015, // <= 1.5% of corpus uses exact category posting scan
@@ -130,17 +130,19 @@ func (p SizeOnlyPlanner) Plan(engine *Engine, query []float32, category string, 
 
 // ClusterAwarePlanner uses per-centroid category histograms along the query's
 // ranked centroids to skip empty clusters, expand nprobe when nearby clusters have
-// few eligible candidates, or fall back to exact search when nearby clusters underfill k.
+// few eligible candidates, or fall back to exact search when nearby clusters underfill k
+// or when scanning dispersed clusters inspects too many non-matching postings.
 type ClusterAwarePlanner struct {
-	MaxExactSelectivity float64
-	MaxExactDocs        int
-	BaseNProbe          int
-	MaxNProbe           int
-	MaxScanClusters     int
-	TargetMultipleOfK   int
+	MaxExactSelectivity float64 `json:"max_exact_selectivity"`
+	MaxExactDocs        int     `json:"max_exact_docs"`
+	BaseNProbe          int     `json:"base_nprobe"`
+	MaxNProbe           int     `json:"max_nprobe"`
+	MaxScanClusters     int     `json:"max_scan_clusters"`
+	TargetMultipleOfK   int     `json:"target_multiple_of_k"`
+	MaxClusterScanRatio int     `json:"max_cluster_scan_ratio"`
 }
 
-// DefaultClusterAwarePlanner returns the frozen cluster-aware planner policy tuned on development queries.
+// DefaultClusterAwarePlanner returns the default cluster-aware planner policy.
 func DefaultClusterAwarePlanner() ClusterAwarePlanner {
 	return ClusterAwarePlanner{
 		MaxExactSelectivity: 0.015,
@@ -149,6 +151,7 @@ func DefaultClusterAwarePlanner() ClusterAwarePlanner {
 		MaxNProbe:           14,
 		MaxScanClusters:     28,
 		TargetMultipleOfK:   8,
+		MaxClusterScanRatio: 12,
 	}
 }
 
@@ -185,6 +188,7 @@ func (p ClusterAwarePlanner) Plan(engine *Engine, query []float32, category stri
 
 	selected := make([]int, 0, p.MaxNProbe)
 	expectedEligible := 0
+	totalClusterDocs := 0
 
 	for _, c := range ranked {
 		eligibleInCluster := hist[c]
@@ -194,6 +198,7 @@ func (p ClusterAwarePlanner) Plan(engine *Engine, query []float32, category stri
 		}
 		selected = append(selected, c)
 		expectedEligible += eligibleInCluster
+		totalClusterDocs += engine.IVF.ClusterSize(c)
 
 		if len(selected) >= p.BaseNProbe && expectedEligible >= targetEligible {
 			break
@@ -203,9 +208,15 @@ func (p ClusterAwarePlanner) Plan(engine *Engine, query []float32, category stri
 		}
 	}
 
-	// Fall back to exact scan if even scanning MaxScanClusters nearest centroids
-	// cannot gather at least min(k, catDocs) eligible candidates.
-	if expectedEligible < min(k, catDocs) {
+	ratioLimit := p.MaxClusterScanRatio
+	if ratioLimit <= 0 {
+		ratioLimit = 12
+	}
+
+	// Fall back to exact scan if scanning MaxScanClusters nearest centroids still
+	// cannot gather min(k, catDocs) eligible candidates, or if the probed IVF clusters
+	// require inspecting more than ratioLimit * catDocs cluster postings.
+	if expectedEligible < min(k, catDocs) || totalClusterDocs > catDocs*ratioLimit {
 		return PlanDecision{
 			Route:            RouteExact,
 			NProbe:           0,
@@ -219,4 +230,125 @@ func (p ClusterAwarePlanner) Plan(engine *Engine, query []float32, category stri
 		ClustersToProbe:  selected,
 		ExpectedEligible: expectedEligible,
 	}
+}
+
+// PlannerTuningReport records how planner hyperparameters were selected on development queries
+// and frozen prior to held-out evaluation.
+type PlannerTuningReport struct {
+	DevQueries           int                 `json:"dev_queries"`
+	TargetRecall         float64             `json:"target_recall"`
+	SizeCandidatesTested int                 `json:"size_candidates_tested"`
+	ClusterConfigsTested int                 `json:"cluster_configs_tested"`
+	FrozenSizeOnly       SizeOnlyPlanner     `json:"frozen_size_only"`
+	SizeDevRecall        float64             `json:"size_dev_recall"`
+	SizeDevEvaluated     float64             `json:"size_dev_evaluated"`
+	FrozenClusterAware   ClusterAwarePlanner `json:"frozen_cluster_aware"`
+	ClusterDevRecall     float64             `json:"cluster_dev_recall"`
+	ClusterDevEvaluated  float64             `json:"cluster_dev_evaluated"`
+}
+
+// TunePlannersOnDevQueries sweeps planner hyperparameter grids exclusively on devQueries,
+// selects the lowest-work configurations meeting the dev recall targets, and returns frozen
+// planners ready for held-out evaluation.
+func TunePlannersOnDevQueries(engine *Engine, devQueries []WorkloadQuery, k int, targetRecall float64) (SizeOnlyPlanner, ClusterAwarePlanner, PlannerTuningReport, error) {
+	devTruth, err := ComputeExactGroundTruth(engine.Exact, devQueries, k)
+	if err != nil {
+		return SizeOnlyPlanner{}, ClusterAwarePlanner{}, PlannerTuningReport{}, err
+	}
+	ctx := context.Background()
+
+	// 1. Tune SizeOnlyPlanner on devQueries (fixing BaseNProbe <= 6 so size-only remains an IVF planner on medium/large categories).
+	sizeTarget := max(0.85, targetRecall-0.06)
+	var (
+		bestSize       = DefaultSizeOnlyPlanner()
+		bestSizeRecall = -1.0
+		bestSizeEval   = 1e18
+		sizeTested     = 0
+	)
+	for _, maxSel := range []float64{0.010, 0.018} {
+		for _, nprobe := range []int{3, 4, 6} {
+			cand := SizeOnlyPlanner{
+				MaxExactSelectivity: maxSel,
+				MaxExactDocs:        50,
+				BaseNProbe:          nprobe,
+			}
+			sizeTested++
+			m, err := EvaluateMethod("tune_size", devQueries, devTruth, k, 0, 1,
+				func(q WorkloadQuery) ([]Result, Route, int, int, error) {
+					res, plan, eval, err := engine.Execute(ctx, cand, q.Vector, q.Category, k)
+					return res, plan.Route, plan.NProbe, eval, err
+				})
+			if err != nil {
+				return SizeOnlyPlanner{}, ClusterAwarePlanner{}, PlannerTuningReport{}, err
+			}
+			meetsOld := bestSizeRecall >= sizeTarget
+			meetsNew := m.RecallAtK >= sizeTarget
+			if (meetsNew && !meetsOld) ||
+				(meetsNew && meetsOld && m.MeanEvaluated < bestSizeEval) ||
+				(!meetsNew && !meetsOld && m.RecallAtK > bestSizeRecall) {
+				bestSize = cand
+				bestSizeRecall = m.RecallAtK
+				bestSizeEval = m.MeanEvaluated
+			}
+		}
+	}
+
+	// 2. Tune ClusterAwarePlanner on devQueries to reach targetRecall with zero underfill and minimum candidate evaluations.
+	var (
+		bestCluster       = DefaultClusterAwarePlanner()
+		bestClusterRecall = -1.0
+		bestClusterEval   = 1e18
+		clusterTested     = 0
+	)
+	for _, maxSel := range []float64{0.010, 0.018} {
+		for _, baseNP := range []int{3, 4} {
+			for _, maxNP := range []int{10, 14, 18} {
+				for _, multK := range []int{10, 14, 18} {
+					for _, ratio := range []int{8, 12} {
+						cand := ClusterAwarePlanner{
+							MaxExactSelectivity: maxSel,
+							MaxExactDocs:        50,
+							BaseNProbe:          baseNP,
+							MaxNProbe:           maxNP,
+							MaxScanClusters:     min(32, maxNP*2),
+							TargetMultipleOfK:   multK,
+							MaxClusterScanRatio: ratio,
+						}
+						clusterTested++
+						m, err := EvaluateMethod("tune_cluster", devQueries, devTruth, k, 0, 1,
+							func(q WorkloadQuery) ([]Result, Route, int, int, error) {
+								res, plan, eval, err := engine.Execute(ctx, cand, q.Vector, q.Category, k)
+								return res, plan.Route, plan.NProbe, eval, err
+							})
+						if err != nil {
+							return SizeOnlyPlanner{}, ClusterAwarePlanner{}, PlannerTuningReport{}, err
+						}
+						meetsOld := bestClusterRecall >= targetRecall
+						meetsNew := m.RecallAtK >= targetRecall && m.UnderfillRate == 0
+						if (meetsNew && !meetsOld) ||
+							(meetsNew && meetsOld && (m.MeanEvaluated < bestClusterEval-1.0 || (m.MeanEvaluated <= bestClusterEval+1.0 && m.RecallAtK > bestClusterRecall))) ||
+							(!meetsNew && !meetsOld && m.RecallAtK > bestClusterRecall) {
+							bestCluster = cand
+							bestClusterRecall = m.RecallAtK
+							bestClusterEval = m.MeanEvaluated
+						}
+					}
+				}
+			}
+		}
+	}
+
+	report := PlannerTuningReport{
+		DevQueries:           len(devQueries),
+		TargetRecall:         targetRecall,
+		SizeCandidatesTested: sizeTested,
+		ClusterConfigsTested: clusterTested,
+		FrozenSizeOnly:       bestSize,
+		SizeDevRecall:        bestSizeRecall,
+		SizeDevEvaluated:     bestSizeEval,
+		FrozenClusterAware:   bestCluster,
+		ClusterDevRecall:     bestClusterRecall,
+		ClusterDevEvaluated:  bestClusterEval,
+	}
+	return bestSize, bestCluster, report, nil
 }

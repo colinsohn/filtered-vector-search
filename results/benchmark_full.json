@@ -1,6 +1,8 @@
 {
+  "corpus": "synthetic",
+  "corpus_source": "Synthetic Gaussian mixture stress workload (controlled equal-sized concentrated vs. dispersed categories)",
   "scale": "full",
-  "timestamp": "2026-11-11T04:11:51Z",
+  "timestamp": "2026-11-11T04:49:12Z",
   "go_version": "go1.27.4",
   "goos": "darwin",
   "goarch": "arm64",
@@ -11,8 +13,32 @@
   "k": 10,
   "dev_queries": 200,
   "held_out_queries": 500,
-  "index_build_ms": 5544.115125,
-  "corpus_memory_bytes": 57902608,
+  "index_build_ms": 5573.574084,
+  "corpus_memory_bytes": 57906192,
+  "planner_tuning": {
+    "dev_queries": 200,
+    "target_recall": 0.975,
+    "size_candidates_tested": 6,
+    "cluster_configs_tested": 72,
+    "frozen_size_only": {
+      "max_exact_selectivity": 0.01,
+      "max_exact_docs": 50,
+      "base_nprobe": 3
+    },
+    "size_dev_recall": 0.9463541666666667,
+    "size_dev_evaluated": 2117.859375,
+    "frozen_cluster_aware": {
+      "max_exact_selectivity": 0.01,
+      "max_exact_docs": 50,
+      "base_nprobe": 3,
+      "max_nprobe": 10,
+      "max_scan_clusters": 20,
+      "target_multiple_of_k": 10,
+      "max_cluster_scan_ratio": 8
+    },
+    "cluster_dev_recall": 0.9874999999999999,
+    "cluster_dev_evaluated": 2585.1822916666665
+  },
   "category_specs": [
     {
       "name": "cat_rare",
@@ -39,7 +65,7 @@
       "name": "cat_medium",
       "distribution": "concentrated",
       "selectivity": 0.15,
-      "num_clusters": 10,
+      "num_clusters": 15,
       "doc_count": 15000
     },
     {
@@ -59,9 +85,9 @@
     "underfilled": 0,
     "underfill_rate": 0,
     "mean_evaluated": 17520.833333333332,
-    "p50_latency_us": 146.25,
-    "p95_latency_us": 4111.5,
-    "qps": 1112.0538510564982,
+    "p50_latency_us": 146.666,
+    "p95_latency_us": 4117.916,
+    "qps": 1120.9766053408066,
     "by_category": {
       "cat_common": {
         "category": "cat_common",
@@ -69,7 +95,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 79500,
-        "p95_latency_us": 4442.541,
+        "p95_latency_us": 4194.417,
         "exact_routes": 80,
         "ivf_routes": 0,
         "mean_nprobe": 0
@@ -80,7 +106,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 2500,
-        "p95_latency_us": 170.792,
+        "p95_latency_us": 177.958,
         "exact_routes": 100,
         "ivf_routes": 0,
         "mean_nprobe": 0
@@ -91,7 +117,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 2500,
-        "p95_latency_us": 175.583,
+        "p95_latency_us": 169.458,
         "exact_routes": 100,
         "ivf_routes": 0,
         "mean_nprobe": 0
@@ -102,7 +128,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 15000,
-        "p95_latency_us": 953.458,
+        "p95_latency_us": 919.708,
         "exact_routes": 100,
         "ivf_routes": 0,
         "mean_nprobe": 0
@@ -113,7 +139,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 500,
-        "p95_latency_us": 40.125,
+        "p95_latency_us": 41.833,
         "exact_routes": 100,
         "ivf_routes": 0,
         "mean_nprobe": 0
@@ -125,57 +151,57 @@
     "queries": 500,
     "non_empty_queries": 480,
     "empty_queries": 20,
-    "recall_at_k": 0.9370833333333334,
-    "underfilled": 25,
-    "underfill_rate": 0.052083333333333336,
-    "mean_evaluated": 2783.5729166666665,
-    "p50_latency_us": 158.792,
-    "p95_latency_us": 2394.709,
-    "qps": 1809.5015100314229,
+    "recall_at_k": 0.9308333333333334,
+    "underfilled": 32,
+    "underfill_rate": 0.06666666666666667,
+    "mean_evaluated": 2127.4708333333333,
+    "p50_latency_us": 71.208,
+    "p95_latency_us": 732.708,
+    "qps": 5964.311563612031,
     "by_category": {
       "cat_common": {
         "category": "cat_common",
         "queries": 80,
         "recall_at_k": 1,
         "underfill_rate": 0,
-        "mean_evaluated": 12341.3625,
-        "p95_latency_us": 5492.666,
+        "mean_evaluated": 8823.175,
+        "p95_latency_us": 947.167,
         "exact_routes": 0,
         "ivf_routes": 80,
-        "mean_nprobe": 4
+        "mean_nprobe": 3
       },
       "cat_concentrated": {
         "category": "cat_concentrated",
         "queries": 100,
-        "recall_at_k": 0.9159999999999999,
-        "underfill_rate": 0.05,
-        "mean_evaluated": 1197.2,
-        "p95_latency_us": 891.875,
+        "recall_at_k": 0.9009999999999999,
+        "underfill_rate": 0.09,
+        "mean_evaluated": 1058.38,
+        "p95_latency_us": 144.458,
         "exact_routes": 0,
         "ivf_routes": 100,
-        "mean_nprobe": 4
+        "mean_nprobe": 3
       },
       "cat_dispersed": {
         "category": "cat_dispersed",
         "queries": 100,
         "recall_at_k": 1,
         "underfill_rate": 0,
-        "mean_evaluated": 403.3,
-        "p95_latency_us": 394.959,
+        "mean_evaluated": 305.76,
+        "p95_latency_us": 71.334,
         "exact_routes": 0,
         "ivf_routes": 100,
-        "mean_nprobe": 4
+        "mean_nprobe": 3
       },
       "cat_medium": {
         "category": "cat_medium",
         "queries": 100,
-        "recall_at_k": 0.7819999999999999,
-        "underfill_rate": 0.2,
-        "mean_evaluated": 1387.56,
-        "p95_latency_us": 1191.125,
+        "recall_at_k": 0.7669999999999999,
+        "underfill_rate": 0.23,
+        "mean_evaluated": 1289.18,
+        "p95_latency_us": 295.959,
         "exact_routes": 0,
         "ivf_routes": 100,
-        "mean_nprobe": 4
+        "mean_nprobe": 3
       },
       "cat_rare": {
         "category": "cat_rare",
@@ -183,7 +209,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 500,
-        "p95_latency_us": 202.333,
+        "p95_latency_us": 37,
         "exact_routes": 100,
         "ivf_routes": 0,
         "mean_nprobe": 0
@@ -195,13 +221,13 @@
     "queries": 500,
     "non_empty_queries": 480,
     "empty_queries": 20,
-    "recall_at_k": 0.9945833333333332,
+    "recall_at_k": 0.9910416666666666,
     "underfilled": 0,
     "underfill_rate": 0,
-    "mean_evaluated": 2721.88125,
-    "p50_latency_us": 140.916,
-    "p95_latency_us": 1057.333,
-    "qps": 3406.1473011108014,
+    "mean_evaluated": 2643.4791666666665,
+    "p50_latency_us": 124.792,
+    "p95_latency_us": 760.458,
+    "qps": 5006.369219736631,
     "by_category": {
       "cat_common": {
         "category": "cat_common",
@@ -209,7 +235,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 8823.175,
-        "p95_latency_us": 1588.166,
+        "p95_latency_us": 935.542,
         "exact_routes": 0,
         "ivf_routes": 80,
         "mean_nprobe": 3
@@ -217,35 +243,35 @@
       "cat_concentrated": {
         "category": "cat_concentrated",
         "queries": 100,
-        "recall_at_k": 0.998,
+        "recall_at_k": 0.983,
         "underfill_rate": 0,
-        "mean_evaluated": 1816.68,
-        "p95_latency_us": 277.375,
+        "mean_evaluated": 1622.42,
+        "p95_latency_us": 182.708,
         "exact_routes": 0,
         "ivf_routes": 100,
-        "mean_nprobe": 2.19
+        "mean_nprobe": 1.96
       },
       "cat_dispersed": {
         "category": "cat_dispersed",
         "queries": 100,
         "recall_at_k": 1,
         "underfill_rate": 0,
-        "mean_evaluated": 313.13,
-        "p95_latency_us": 108.167,
+        "mean_evaluated": 314.54,
+        "p95_latency_us": 71.75,
         "exact_routes": 0,
         "ivf_routes": 100,
-        "mean_nprobe": 3.05
+        "mean_nprobe": 3.06
       },
       "cat_medium": {
         "category": "cat_medium",
         "queries": 100,
-        "recall_at_k": 0.976,
+        "recall_at_k": 0.9739999999999999,
         "underfill_rate": 0,
-        "mean_evaluated": 3376.68,
-        "p95_latency_us": 722,
+        "mean_evaluated": 3193.2,
+        "p95_latency_us": 402.833,
         "exact_routes": 0,
         "ivf_routes": 100,
-        "mean_nprobe": 2.97
+        "mean_nprobe": 2.81
       },
       "cat_rare": {
         "category": "cat_rare",
@@ -253,7 +279,7 @@
         "recall_at_k": 1,
         "underfill_rate": 0,
         "mean_evaluated": 500,
-        "p95_latency_us": 61.75,
+        "p95_latency_us": 36.542,
         "exact_routes": 100,
         "ivf_routes": 0,
         "mean_nprobe": 0
@@ -270,9 +296,9 @@
       "underfilled": 81,
       "underfill_rate": 0.16875,
       "mean_evaluated": 754.5208333333334,
-      "p50_latency_us": 32.375,
-      "p95_latency_us": 231.875,
-      "qps": 15487.867836861125,
+      "p50_latency_us": 33.042,
+      "p95_latency_us": 227.167,
+      "qps": 15118.027651316037,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -280,7 +306,7 @@
           "recall_at_k": 0.9512499999999999,
           "underfill_rate": 0,
           "mean_evaluated": 2308.925,
-          "p95_latency_us": 400.75,
+          "p95_latency_us": 403.875,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 1
@@ -291,7 +317,7 @@
           "recall_at_k": 0.83,
           "underfill_rate": 0.17,
           "mean_evaluated": 692.53,
-          "p95_latency_us": 74.375,
+          "p95_latency_us": 74.709,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 1
@@ -302,7 +328,7 @@
           "recall_at_k": 0.9529999999999998,
           "underfill_rate": 0.01,
           "mean_evaluated": 71.09,
-          "p95_latency_us": 36.917,
+          "p95_latency_us": 36.833,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 1
@@ -313,7 +339,7 @@
           "recall_at_k": 0.607,
           "underfill_rate": 0.3,
           "mean_evaluated": 844.01,
-          "p95_latency_us": 151.916,
+          "p95_latency_us": 161.209,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 1
@@ -324,7 +350,7 @@
           "recall_at_k": 0.67,
           "underfill_rate": 0.33,
           "mean_evaluated": 166.93,
-          "p95_latency_us": 32.625,
+          "p95_latency_us": 33.292,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 1
@@ -340,9 +366,9 @@
       "underfilled": 72,
       "underfill_rate": 0.15,
       "mean_evaluated": 1412.1458333333333,
-      "p50_latency_us": 50.333,
-      "p95_latency_us": 484.958,
-      "qps": 8606.985652189345,
+      "p50_latency_us": 51.666,
+      "p95_latency_us": 512.042,
+      "qps": 8311.262314520329,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -350,7 +376,7 @@
           "recall_at_k": 0.9937499999999998,
           "underfill_rate": 0,
           "mean_evaluated": 5503.3875,
-          "p95_latency_us": 663.625,
+          "p95_latency_us": 674.209,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 2
@@ -361,7 +387,7 @@
           "recall_at_k": 0.87,
           "underfill_rate": 0.13,
           "mean_evaluated": 928.3,
-          "p95_latency_us": 129.166,
+          "p95_latency_us": 129.542,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 2
@@ -372,7 +398,7 @@
           "recall_at_k": 0.993,
           "underfill_rate": 0,
           "mean_evaluated": 188.03,
-          "p95_latency_us": 54.5,
+          "p95_latency_us": 55.667,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 2
@@ -383,7 +409,7 @@
           "recall_at_k": 0.696,
           "underfill_rate": 0.28,
           "mean_evaluated": 1086.95,
-          "p95_latency_us": 220.667,
+          "p95_latency_us": 236.916,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 2
@@ -394,7 +420,7 @@
           "recall_at_k": 0.69,
           "underfill_rate": 0.31,
           "mean_evaluated": 172.31,
-          "p95_latency_us": 42.917,
+          "p95_latency_us": 43.625,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 2
@@ -410,9 +436,9 @@
       "underfilled": 54,
       "underfill_rate": 0.1125,
       "mean_evaluated": 2718.10625,
-      "p50_latency_us": 82.875,
-      "p95_latency_us": 960.334,
-      "qps": 4595.259738984407,
+      "p50_latency_us": 82.625,
+      "p95_latency_us": 961.292,
+      "qps": 4572.20658158408,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -420,7 +446,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 12341.3625,
-          "p95_latency_us": 1100.708,
+          "p95_latency_us": 1121.083,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 4
@@ -431,7 +457,7 @@
           "recall_at_k": 0.9159999999999999,
           "underfill_rate": 0.05,
           "mean_evaluated": 1197.2,
-          "p95_latency_us": 154.916,
+          "p95_latency_us": 158.167,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 4
@@ -442,7 +468,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 403.3,
-          "p95_latency_us": 82.416,
+          "p95_latency_us": 82.667,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 4
@@ -453,7 +479,7 @@
           "recall_at_k": 0.7819999999999999,
           "underfill_rate": 0.2,
           "mean_evaluated": 1387.56,
-          "p95_latency_us": 344.25,
+          "p95_latency_us": 335.583,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 4
@@ -464,7 +490,7 @@
           "recall_at_k": 0.7,
           "underfill_rate": 0.29,
           "mean_evaluated": 185.76,
-          "p95_latency_us": 58.542,
+          "p95_latency_us": 58.166,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 4
@@ -480,9 +506,9 @@
       "underfilled": 37,
       "underfill_rate": 0.07708333333333334,
       "mean_evaluated": 4301.722916666667,
-      "p50_latency_us": 116.75,
-      "p95_latency_us": 1599.959,
-      "qps": 2794.141616410925,
+      "p50_latency_us": 118.292,
+      "p95_latency_us": 1622.791,
+      "qps": 2727.317559414645,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -490,7 +516,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 20444.8875,
-          "p95_latency_us": 1778.959,
+          "p95_latency_us": 1889.833,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 8
@@ -501,7 +527,7 @@
           "recall_at_k": 0.9549999999999998,
           "underfill_rate": 0.01,
           "mean_evaluated": 1353.94,
-          "p95_latency_us": 187.459,
+          "p95_latency_us": 198.5,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -512,7 +538,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 671.88,
-          "p95_latency_us": 122.583,
+          "p95_latency_us": 127.083,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -523,7 +549,7 @@
           "recall_at_k": 0.835,
           "underfill_rate": 0.11,
           "mean_evaluated": 2040.81,
-          "p95_latency_us": 480,
+          "p95_latency_us": 492.625,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -534,7 +560,7 @@
           "recall_at_k": 0.735,
           "underfill_rate": 0.25,
           "mean_evaluated": 225.73,
-          "p95_latency_us": 84.833,
+          "p95_latency_us": 85.208,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -550,9 +576,9 @@
       "underfilled": 21,
       "underfill_rate": 0.04375,
       "mean_evaluated": 5557.145833333333,
-      "p50_latency_us": 158.583,
-      "p95_latency_us": 2205.458,
-      "qps": 2050.101635702018,
+      "p50_latency_us": 166.5,
+      "p95_latency_us": 2291.667,
+      "qps": 1910.526337549363,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -560,7 +586,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 26554.3875,
-          "p95_latency_us": 2399.459,
+          "p95_latency_us": 2961.083,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 12
@@ -571,7 +597,7 @@
           "recall_at_k": 0.9629999999999999,
           "underfill_rate": 0,
           "mean_evaluated": 1436.68,
-          "p95_latency_us": 215.208,
+          "p95_latency_us": 239.625,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 12
@@ -582,7 +608,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 849.69,
-          "p95_latency_us": 155.916,
+          "p95_latency_us": 176.5,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 12
@@ -593,7 +619,7 @@
           "recall_at_k": 0.9280000000000002,
           "underfill_rate": 0.02,
           "mean_evaluated": 2866.03,
-          "p95_latency_us": 623.083,
+          "p95_latency_us": 680.416,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 12
@@ -604,7 +630,7 @@
           "recall_at_k": 0.7929999999999999,
           "underfill_rate": 0.19,
           "mean_evaluated": 278.39,
-          "p95_latency_us": 102.708,
+          "p95_latency_us": 110.917,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 12
@@ -620,9 +646,9 @@
       "underfilled": 13,
       "underfill_rate": 0.027083333333333334,
       "mean_evaluated": 6674.0375,
-      "p50_latency_us": 182.25,
-      "p95_latency_us": 2774.291,
-      "qps": 1624.8702642648375,
+      "p50_latency_us": 183.333,
+      "p95_latency_us": 2795.791,
+      "qps": 1593.9421696528289,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -630,7 +656,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 31800.8375,
-          "p95_latency_us": 3099.125,
+          "p95_latency_us": 3452.792,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 16
@@ -641,7 +667,7 @@
           "recall_at_k": 0.9669999999999999,
           "underfill_rate": 0,
           "mean_evaluated": 1529.55,
-          "p95_latency_us": 246.041,
+          "p95_latency_us": 253.042,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 16
@@ -652,7 +678,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 1002.91,
-          "p95_latency_us": 188.792,
+          "p95_latency_us": 201.458,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 16
@@ -663,7 +689,7 @@
           "recall_at_k": 0.9689999999999999,
           "underfill_rate": 0,
           "mean_evaluated": 3741.96,
-          "p95_latency_us": 785.292,
+          "p95_latency_us": 803.667,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 16
@@ -674,7 +700,7 @@
           "recall_at_k": 0.86,
           "underfill_rate": 0.13,
           "mean_evaluated": 320.29,
-          "p95_latency_us": 112.667,
+          "p95_latency_us": 119.833,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 16
@@ -690,9 +716,9 @@
       "underfilled": 7,
       "underfill_rate": 0.014583333333333334,
       "mean_evaluated": 8707.539583333333,
-      "p50_latency_us": 230.5,
-      "p95_latency_us": 3930.417,
-      "qps": 1144.199888669351,
+      "p50_latency_us": 246.209,
+      "p95_latency_us": 4198.583,
+      "qps": 1061.201651350322,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -700,7 +726,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 40711.6875,
-          "p95_latency_us": 4337.792,
+          "p95_latency_us": 5375.875,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 24
@@ -711,7 +737,7 @@
           "recall_at_k": 0.9969999999999999,
           "underfill_rate": 0,
           "mean_evaluated": 1723.98,
-          "p95_latency_us": 308.417,
+          "p95_latency_us": 344.625,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 24
@@ -722,7 +748,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 1278.67,
-          "p95_latency_us": 255.417,
+          "p95_latency_us": 296.709,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 24
@@ -733,7 +759,7 @@
           "recall_at_k": 0.996,
           "underfill_rate": 0,
           "mean_evaluated": 5856.21,
-          "p95_latency_us": 1143.625,
+          "p95_latency_us": 1237.084,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 24
@@ -744,7 +770,7 @@
           "recall_at_k": 0.9130000000000001,
           "underfill_rate": 0.07,
           "mean_evaluated": 367.98,
-          "p95_latency_us": 136.292,
+          "p95_latency_us": 152.25,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 24
@@ -760,9 +786,9 @@
       "underfilled": 2,
       "underfill_rate": 0.004166666666666667,
       "mean_evaluated": 10640.920833333334,
-      "p50_latency_us": 280.792,
-      "p95_latency_us": 5078.875,
-      "qps": 887.5485811327977,
+      "p50_latency_us": 283.291,
+      "p95_latency_us": 5241.25,
+      "qps": 851.6191942192089,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -770,7 +796,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 49413.0625,
-          "p95_latency_us": 5561.5,
+          "p95_latency_us": 6407.334,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 32
@@ -781,7 +807,7 @@
           "recall_at_k": 0.998,
           "underfill_rate": 0,
           "mean_evaluated": 1875.98,
-          "p95_latency_us": 354.417,
+          "p95_latency_us": 371.791,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 32
@@ -792,7 +818,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 1546.08,
-          "p95_latency_us": 312.916,
+          "p95_latency_us": 356.459,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 32
@@ -803,7 +829,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 7724,
-          "p95_latency_us": 1390.875,
+          "p95_latency_us": 1488.541,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 32
@@ -814,7 +840,7 @@
           "recall_at_k": 0.953,
           "underfill_rate": 0.02,
           "mean_evaluated": 399.91,
-          "p95_latency_us": 153.791,
+          "p95_latency_us": 171.125,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 32
@@ -830,9 +856,9 @@
       "underfilled": 0,
       "underfill_rate": 0,
       "mean_evaluated": 17520.833333333332,
-      "p50_latency_us": 486.917,
-      "p95_latency_us": 9295.958,
-      "qps": 477.6651663996715,
+      "p50_latency_us": 474.625,
+      "p95_latency_us": 9210.917,
+      "qps": 482.23883569160836,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -840,7 +866,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 79500,
-          "p95_latency_us": 9964.958,
+          "p95_latency_us": 10628,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 64
@@ -851,7 +877,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 2500,
-          "p95_latency_us": 464.875,
+          "p95_latency_us": 486.541,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 64
@@ -862,7 +888,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 2500,
-          "p95_latency_us": 533.5,
+          "p95_latency_us": 559.542,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 64
@@ -873,7 +899,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 15000,
-          "p95_latency_us": 2240.542,
+          "p95_latency_us": 2421.5,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 64
@@ -884,7 +910,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 500,
-          "p95_latency_us": 219.5,
+          "p95_latency_us": 225.666,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 64
@@ -902,9 +928,9 @@
       "underfilled": 431,
       "underfill_rate": 0.8979166666666667,
       "mean_evaluated": 23890.864583333332,
-      "p50_latency_us": 4485.792,
-      "p95_latency_us": 5297.334,
-      "qps": 225.20922782925987,
+      "p50_latency_us": 4457.375,
+      "p95_latency_us": 5522.291,
+      "qps": 225.95024221677676,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -912,7 +938,7 @@
           "recall_at_k": 0.8699999999999998,
           "underfill_rate": 0.3875,
           "mean_evaluated": 23575.6375,
-          "p95_latency_us": 5256,
+          "p95_latency_us": 5354.875,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 8
@@ -923,7 +949,7 @@
           "recall_at_k": 0.382,
           "underfill_rate": 1,
           "mean_evaluated": 24705.52,
-          "p95_latency_us": 5346.542,
+          "p95_latency_us": 5572.5,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -934,7 +960,7 @@
           "recall_at_k": 0.09999999999999984,
           "underfill_rate": 1,
           "mean_evaluated": 23726.56,
-          "p95_latency_us": 5297.334,
+          "p95_latency_us": 5250.25,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -945,7 +971,7 @@
           "recall_at_k": 0.4330000000000001,
           "underfill_rate": 1,
           "mean_evaluated": 23246.2,
-          "p95_latency_us": 5316.833,
+          "p95_latency_us": 5522.291,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -956,7 +982,7 @@
           "recall_at_k": 0.162,
           "underfill_rate": 1,
           "mean_evaluated": 24137.36,
-          "p95_latency_us": 5251.125,
+          "p95_latency_us": 5616.75,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -972,9 +998,9 @@
       "underfilled": 280,
       "underfill_rate": 0.5833333333333334,
       "mean_evaluated": 23890.864583333332,
-      "p50_latency_us": 4509.542,
-      "p95_latency_us": 5450.542,
-      "qps": 223.55175348662235,
+      "p50_latency_us": 4458.042,
+      "p95_latency_us": 5435.333,
+      "qps": 225.7627748327824,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -982,7 +1008,7 @@
           "recall_at_k": 0.9875,
           "underfill_rate": 0.05,
           "mean_evaluated": 23575.6375,
-          "p95_latency_us": 5357.25,
+          "p95_latency_us": 5384.625,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 8
@@ -993,7 +1019,7 @@
           "recall_at_k": 0.758,
           "underfill_rate": 0.45,
           "mean_evaluated": 24705.52,
-          "p95_latency_us": 5639.833,
+          "p95_latency_us": 5640.25,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1004,7 +1030,7 @@
           "recall_at_k": 0.13599999999999984,
           "underfill_rate": 1,
           "mean_evaluated": 23726.56,
-          "p95_latency_us": 5347.833,
+          "p95_latency_us": 5339.542,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1015,7 +1041,7 @@
           "recall_at_k": 0.698,
           "underfill_rate": 0.31,
           "mean_evaluated": 23246.2,
-          "p95_latency_us": 5317.958,
+          "p95_latency_us": 5326.292,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1026,7 +1052,7 @@
           "recall_at_k": 0.322,
           "underfill_rate": 1,
           "mean_evaluated": 24137.36,
-          "p95_latency_us": 5421.917,
+          "p95_latency_us": 5448.375,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1042,9 +1068,9 @@
       "underfilled": 220,
       "underfill_rate": 0.4583333333333333,
       "mean_evaluated": 23890.864583333332,
-      "p50_latency_us": 4528.25,
-      "p95_latency_us": 5373.042,
-      "qps": 223.30962845799846,
+      "p50_latency_us": 4495.958,
+      "p95_latency_us": 5646.583,
+      "qps": 222.83634956187933,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -1052,7 +1078,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 23575.6375,
-          "p95_latency_us": 5449.083,
+          "p95_latency_us": 5491.542,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 8
@@ -1063,7 +1089,7 @@
           "recall_at_k": 0.82,
           "underfill_rate": 0.18,
           "mean_evaluated": 24705.52,
-          "p95_latency_us": 5486.792,
+          "p95_latency_us": 5889,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1074,7 +1100,7 @@
           "recall_at_k": 0.21300000000000008,
           "underfill_rate": 1,
           "mean_evaluated": 23726.56,
-          "p95_latency_us": 5339.708,
+          "p95_latency_us": 5471.75,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1085,7 +1111,7 @@
           "recall_at_k": 0.7,
           "underfill_rate": 0.3,
           "mean_evaluated": 23246.2,
-          "p95_latency_us": 5271.459,
+          "p95_latency_us": 5684.167,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1096,7 +1122,7 @@
           "recall_at_k": 0.5689999999999998,
           "underfill_rate": 0.72,
           "mean_evaluated": 24137.36,
-          "p95_latency_us": 5482.125,
+          "p95_latency_us": 5633.375,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1112,9 +1138,9 @@
       "underfilled": 183,
       "underfill_rate": 0.38125,
       "mean_evaluated": 23890.864583333332,
-      "p50_latency_us": 4471.917,
-      "p95_latency_us": 5318.833,
-      "qps": 225.85589076796762,
+      "p50_latency_us": 4462.75,
+      "p95_latency_us": 5424.75,
+      "qps": 225.84918589246107,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -1122,7 +1148,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 23575.6375,
-          "p95_latency_us": 5156.083,
+          "p95_latency_us": 5344.625,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 8
@@ -1133,7 +1159,7 @@
           "recall_at_k": 0.82,
           "underfill_rate": 0.18,
           "mean_evaluated": 24705.52,
-          "p95_latency_us": 5457.125,
+          "p95_latency_us": 5455.25,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1144,7 +1170,7 @@
           "recall_at_k": 0.34699999999999986,
           "underfill_rate": 1,
           "mean_evaluated": 23726.56,
-          "p95_latency_us": 5254.458,
+          "p95_latency_us": 5391.542,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1155,7 +1181,7 @@
           "recall_at_k": 0.7,
           "underfill_rate": 0.3,
           "mean_evaluated": 23246.2,
-          "p95_latency_us": 5235.041,
+          "p95_latency_us": 5505.458,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1166,7 +1192,7 @@
           "recall_at_k": 0.667,
           "underfill_rate": 0.35,
           "mean_evaluated": 24137.36,
-          "p95_latency_us": 5249.334,
+          "p95_latency_us": 5315.584,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1182,9 +1208,9 @@
       "underfilled": 158,
       "underfill_rate": 0.32916666666666666,
       "mean_evaluated": 23890.864583333332,
-      "p50_latency_us": 4472.625,
-      "p95_latency_us": 5272.292,
-      "qps": 226.13774845750842,
+      "p50_latency_us": 4455.792,
+      "p95_latency_us": 5460.292,
+      "qps": 225.24519486895977,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -1192,7 +1218,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 23575.6375,
-          "p95_latency_us": 5106.792,
+          "p95_latency_us": 5544.167,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 8
@@ -1203,7 +1229,7 @@
           "recall_at_k": 0.82,
           "underfill_rate": 0.18,
           "mean_evaluated": 24705.52,
-          "p95_latency_us": 5496.625,
+          "p95_latency_us": 5522.542,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1214,7 +1240,7 @@
           "recall_at_k": 0.6989999999999997,
           "underfill_rate": 0.77,
           "mean_evaluated": 23726.56,
-          "p95_latency_us": 5231.542,
+          "p95_latency_us": 5326.083,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1225,7 +1251,7 @@
           "recall_at_k": 0.7,
           "underfill_rate": 0.3,
           "mean_evaluated": 23246.2,
-          "p95_latency_us": 5262.916,
+          "p95_latency_us": 5354.541,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1236,7 +1262,7 @@
           "recall_at_k": 0.67,
           "underfill_rate": 0.33,
           "mean_evaluated": 24137.36,
-          "p95_latency_us": 5146.625,
+          "p95_latency_us": 5566.542,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1252,9 +1278,9 @@
       "underfilled": 106,
       "underfill_rate": 0.22083333333333333,
       "mean_evaluated": 23890.864583333332,
-      "p50_latency_us": 5078.625,
-      "p95_latency_us": 10696.083,
-      "qps": 166.51138785951318,
+      "p50_latency_us": 4488,
+      "p95_latency_us": 5617.417,
+      "qps": 223.704051680493,
       "by_category": {
         "cat_common": {
           "category": "cat_common",
@@ -1262,7 +1288,7 @@
           "recall_at_k": 1,
           "underfill_rate": 0,
           "mean_evaluated": 23575.6375,
-          "p95_latency_us": 9514.5,
+          "p95_latency_us": 5453,
           "exact_routes": 0,
           "ivf_routes": 80,
           "mean_nprobe": 8
@@ -1273,7 +1299,7 @@
           "recall_at_k": 0.82,
           "underfill_rate": 0.18,
           "mean_evaluated": 24705.52,
-          "p95_latency_us": 11341.416,
+          "p95_latency_us": 5635.708,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1284,7 +1310,7 @@
           "recall_at_k": 0.9239999999999998,
           "underfill_rate": 0.25,
           "mean_evaluated": 23726.56,
-          "p95_latency_us": 10174.125,
+          "p95_latency_us": 5316.458,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1295,7 +1321,7 @@
           "recall_at_k": 0.7,
           "underfill_rate": 0.3,
           "mean_evaluated": 23246.2,
-          "p95_latency_us": 10670,
+          "p95_latency_us": 5647.167,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1306,7 +1332,7 @@
           "recall_at_k": 0.67,
           "underfill_rate": 0.33,
           "mean_evaluated": 24137.36,
-          "p95_latency_us": 11456.833,
+          "p95_latency_us": 5753.208,
           "exact_routes": 0,
           "ivf_routes": 100,
           "mean_nprobe": 8
@@ -1322,24 +1348,24 @@
     "rejected_429": 0,
     "timed_out": 0,
     "other_errors": 0,
-    "throughput_qps": 6756.205167384882,
-    "engine_p50_us": 233.458,
-    "engine_p95_us": 2552.542,
-    "http_client_p50_us": 673.416,
-    "http_client_p95_us": 3622.708
+    "throughput_qps": 15985.868492252846,
+    "engine_p50_us": 155.584,
+    "engine_p95_us": 1168.958,
+    "http_client_p50_us": 286.375,
+    "http_client_p95_us": 1356.375
   },
   "http_load_saturated": {
     "concurrency": 16,
     "max_in_flight": 2,
     "total_requests": 1000,
-    "succeeded": 46,
-    "rejected_429": 954,
+    "succeeded": 26,
+    "rejected_429": 974,
     "timed_out": 0,
     "other_errors": 0,
-    "throughput_qps": 2326.1155316857894,
-    "engine_p50_us": 337.166,
-    "engine_p95_us": 2559.125,
-    "http_client_p50_us": 711.416,
-    "http_client_p95_us": 2833.5
+    "throughput_qps": 2627.147364577121,
+    "engine_p50_us": 266.542,
+    "engine_p95_us": 2089.792,
+    "http_client_p50_us": 452.209,
+    "http_client_p95_us": 2173.041
   }
 }

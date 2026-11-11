@@ -2,4 +2,5 @@
 *.out
 *.prof
 /bin/
+/.cache/
 .DS_Store

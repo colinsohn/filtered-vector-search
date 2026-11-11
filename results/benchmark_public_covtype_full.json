@@ -1,0 +1,1781 @@
+{
+  "corpus": "public_covtype",
+  "corpus_source": "UCI Forest Covertype (CC BY 4.0, Blackard \u0026 Dean 1998, 54D standardized cartographic vectors, 7 real cover_type categories)",
+  "scale": "full",
+  "timestamp": "2026-11-11T04:50:05Z",
+  "go_version": "go1.27.4",
+  "goos": "darwin",
+  "goarch": "arm64",
+  "num_cpu": 8,
+  "corpus_docs": 100000,
+  "dim": 54,
+  "num_clusters": 64,
+  "k": 10,
+  "dev_queries": 200,
+  "held_out_queries": 500,
+  "index_build_ms": 4698.075708,
+  "corpus_memory_bytes": 49957184,
+  "planner_tuning": {
+    "dev_queries": 200,
+    "target_recall": 0.975,
+    "size_candidates_tested": 6,
+    "cluster_configs_tested": 72,
+    "frozen_size_only": {
+      "max_exact_selectivity": 0.01,
+      "max_exact_docs": 50,
+      "base_nprobe": 3
+    },
+    "size_dev_recall": 0.9980000000000001,
+    "size_dev_evaluated": 1716.065,
+    "frozen_cluster_aware": {
+      "max_exact_selectivity": 0.01,
+      "max_exact_docs": 50,
+      "base_nprobe": 3,
+      "max_nprobe": 10,
+      "max_scan_clusters": 20,
+      "target_multiple_of_k": 10,
+      "max_cluster_scan_ratio": 12
+    },
+    "cluster_dev_recall": 0.9990000000000001,
+    "cluster_dev_evaluated": 1736.085
+  },
+  "category_specs": [
+    {
+      "name": "cottonwood_willow",
+      "distribution": "concentrated (10/64 clusters)",
+      "selectivity": 0.0045,
+      "num_clusters": 10,
+      "doc_count": 450
+    },
+    {
+      "name": "aspen",
+      "distribution": "dispersed (41/64 clusters)",
+      "selectivity": 0.01579,
+      "num_clusters": 41,
+      "doc_count": 1579
+    },
+    {
+      "name": "douglas_fir",
+      "distribution": "dispersed (25/64 clusters)",
+      "selectivity": 0.03047,
+      "num_clusters": 25,
+      "doc_count": 3047
+    },
+    {
+      "name": "krummholz",
+      "distribution": "dispersed (41/64 clusters)",
+      "selectivity": 0.03618,
+      "num_clusters": 41,
+      "doc_count": 3618
+    },
+    {
+      "name": "ponderosa_pine",
+      "distribution": "concentrated (16/64 clusters)",
+      "selectivity": 0.06132,
+      "num_clusters": 16,
+      "doc_count": 6132
+    },
+    {
+      "name": "spruce_fir",
+      "distribution": "dispersed (61/64 clusters)",
+      "selectivity": 0.36331,
+      "num_clusters": 61,
+      "doc_count": 36331
+    },
+    {
+      "name": "lodgepole_pine",
+      "distribution": "dispersed (63/64 clusters)",
+      "selectivity": 0.48843,
+      "num_clusters": 63,
+      "doc_count": 48843
+    }
+  ],
+  "exact": {
+    "method": "exact",
+    "queries": 500,
+    "non_empty_queries": 500,
+    "empty_queries": 0,
+    "recall_at_k": 1,
+    "underfilled": 0,
+    "underfill_rate": 0,
+    "mean_evaluated": 14210.152,
+    "p50_latency_us": 174.292,
+    "p95_latency_us": 2128.584,
+    "qps": 1578.0181366610984,
+    "by_category": {
+      "aspen": {
+        "category": "aspen",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 1579,
+        "p95_latency_us": 96.625,
+        "exact_routes": 72,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "cottonwood_willow": {
+        "category": "cottonwood_willow",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 450,
+        "p95_latency_us": 29.084,
+        "exact_routes": 72,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "douglas_fir": {
+        "category": "douglas_fir",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 3047,
+        "p95_latency_us": 175.458,
+        "exact_routes": 72,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "krummholz": {
+        "category": "krummholz",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 3618,
+        "p95_latency_us": 202.542,
+        "exact_routes": 71,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "lodgepole_pine": {
+        "category": "lodgepole_pine",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 48843,
+        "p95_latency_us": 2189.25,
+        "exact_routes": 71,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "ponderosa_pine": {
+        "category": "ponderosa_pine",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 6132,
+        "p95_latency_us": 345.333,
+        "exact_routes": 71,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "spruce_fir": {
+        "category": "spruce_fir",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 36331,
+        "p95_latency_us": 1638.417,
+        "exact_routes": 71,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      }
+    }
+  },
+  "size_only_planner": {
+    "method": "size_only_planner",
+    "queries": 500,
+    "non_empty_queries": 500,
+    "empty_queries": 0,
+    "recall_at_k": 0.9987999999999999,
+    "underfilled": 1,
+    "underfill_rate": 0.002,
+    "mean_evaluated": 1686.034,
+    "p50_latency_us": 114.625,
+    "p95_latency_us": 375.042,
+    "qps": 7351.029836644141,
+    "by_category": {
+      "aspen": {
+        "category": "aspen",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 177.26388888888889,
+        "p95_latency_us": 46,
+        "exact_routes": 0,
+        "ivf_routes": 72,
+        "mean_nprobe": 3
+      },
+      "cottonwood_willow": {
+        "category": "cottonwood_willow",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 450,
+        "p95_latency_us": 29,
+        "exact_routes": 72,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "douglas_fir": {
+        "category": "douglas_fir",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 1594.2222222222222,
+        "p95_latency_us": 140.459,
+        "exact_routes": 0,
+        "ivf_routes": 72,
+        "mean_nprobe": 3
+      },
+      "krummholz": {
+        "category": "krummholz",
+        "queries": 71,
+        "recall_at_k": 0.991549295774648,
+        "underfill_rate": 0.014084507042253521,
+        "mean_evaluated": 760.5352112676056,
+        "p95_latency_us": 105.166,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3
+      },
+      "lodgepole_pine": {
+        "category": "lodgepole_pine",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 3940.830985915493,
+        "p95_latency_us": 529.334,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3
+      },
+      "ponderosa_pine": {
+        "category": "ponderosa_pine",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 2395.169014084507,
+        "p95_latency_us": 239.541,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3
+      },
+      "spruce_fir": {
+        "category": "spruce_fir",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 2524.169014084507,
+        "p95_latency_us": 366.666,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3
+      }
+    }
+  },
+  "cluster_aware_planner": {
+    "method": "cluster_aware_planner",
+    "queries": 500,
+    "non_empty_queries": 500,
+    "empty_queries": 0,
+    "recall_at_k": 1,
+    "underfilled": 0,
+    "underfill_rate": 0,
+    "mean_evaluated": 1711.882,
+    "p50_latency_us": 114.292,
+    "p95_latency_us": 377.833,
+    "qps": 7307.7987898158535,
+    "by_category": {
+      "aspen": {
+        "category": "aspen",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 202.51388888888889,
+        "p95_latency_us": 44.167,
+        "exact_routes": 0,
+        "ivf_routes": 72,
+        "mean_nprobe": 3.6666666666666665
+      },
+      "cottonwood_willow": {
+        "category": "cottonwood_willow",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 450,
+        "p95_latency_us": 31.625,
+        "exact_routes": 72,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "douglas_fir": {
+        "category": "douglas_fir",
+        "queries": 72,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 1616.6805555555557,
+        "p95_latency_us": 143.75,
+        "exact_routes": 0,
+        "ivf_routes": 72,
+        "mean_nprobe": 3.0555555555555554
+      },
+      "krummholz": {
+        "category": "krummholz",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 771.6478873239437,
+        "p95_latency_us": 108.042,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3.1690140845070425
+      },
+      "lodgepole_pine": {
+        "category": "lodgepole_pine",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 3940.830985915493,
+        "p95_latency_us": 548.333,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3
+      },
+      "ponderosa_pine": {
+        "category": "ponderosa_pine",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 2517.7042253521126,
+        "p95_latency_us": 240.917,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3
+      },
+      "spruce_fir": {
+        "category": "spruce_fir",
+        "queries": 71,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 2524.169014084507,
+        "p95_latency_us": 361.083,
+        "exact_routes": 0,
+        "ivf_routes": 71,
+        "mean_nprobe": 3
+      }
+    }
+  },
+  "ivf_prefilter_sweep": [
+    {
+      "method": "ivf_prefilter_nprobe_1",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.9674000000000004,
+      "underfilled": 4,
+      "underfill_rate": 0.008,
+      "mean_evaluated": 743.27,
+      "p50_latency_us": 49.458,
+      "p95_latency_us": 147.75,
+      "qps": 16278.875279049767,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 0.9666666666666666,
+          "underfill_rate": 0,
+          "mean_evaluated": 105.20833333333333,
+          "p95_latency_us": 25.666,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 1
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.9805555555555555,
+          "underfill_rate": 0.013888888888888888,
+          "mean_evaluated": 104.66666666666667,
+          "p95_latency_us": 22,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 1
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 0.9944444444444444,
+          "underfill_rate": 0,
+          "mean_evaluated": 959.625,
+          "p95_latency_us": 103.708,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 1
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.9267605633802817,
+          "underfill_rate": 0.04225352112676056,
+          "mean_evaluated": 689.3802816901408,
+          "p95_latency_us": 77.291,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 1
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 0.945070422535211,
+          "underfill_rate": 0,
+          "mean_evaluated": 1415.1830985915492,
+          "p95_latency_us": 208.708,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 1
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 0.9802816901408452,
+          "underfill_rate": 0,
+          "mean_evaluated": 1029.4788732394366,
+          "p95_latency_us": 145.75,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 1
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 0.9774647887323943,
+          "underfill_rate": 0,
+          "mean_evaluated": 914.2816901408451,
+          "p95_latency_us": 148.208,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 1
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_2",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.9945999999999998,
+      "underfilled": 1,
+      "underfill_rate": 0.002,
+      "mean_evaluated": 1200.402,
+      "p50_latency_us": 74,
+      "p95_latency_us": 268.5,
+      "qps": 10061.717501906829,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 149.5,
+          "p95_latency_us": 39.041,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 2
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.9888888888888889,
+          "underfill_rate": 0,
+          "mean_evaluated": 219.76388888888889,
+          "p95_latency_us": 33.542,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 2
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 1207.9444444444443,
+          "p95_latency_us": 124.959,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 2
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.9873239436619717,
+          "underfill_rate": 0.014084507042253521,
+          "mean_evaluated": 732.2112676056338,
+          "p95_latency_us": 95,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 2
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 0.9971830985915494,
+          "underfill_rate": 0,
+          "mean_evaluated": 2760.478873239437,
+          "p95_latency_us": 378.167,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 2
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 0.9901408450704225,
+          "underfill_rate": 0,
+          "mean_evaluated": 1625.7605633802816,
+          "p95_latency_us": 195.667,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 2
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 0.9985915492957748,
+          "underfill_rate": 0,
+          "mean_evaluated": 1735.661971830986,
+          "p95_latency_us": 268.5,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 2
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_4",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 2020.584,
+      "p50_latency_us": 125.208,
+      "p95_latency_us": 492.375,
+      "qps": 6036.163646336037,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 203.69444444444446,
+          "p95_latency_us": 48.333,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 4
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 275.6111111111111,
+          "p95_latency_us": 42.583,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 4
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 1745.125,
+          "p95_latency_us": 148.75,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 4
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 784.4366197183099,
+          "p95_latency_us": 115.25,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 4
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 5130.957746478874,
+          "p95_latency_us": 609.291,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 4
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 2741.6197183098593,
+          "p95_latency_us": 260.583,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 4
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3316.6901408450703,
+          "p95_latency_us": 439.084,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 4
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_8",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 3309.43,
+      "p50_latency_us": 161.292,
+      "p95_latency_us": 854.875,
+      "qps": 3582.6802431681635,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 318.625,
+          "p95_latency_us": 81.917,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 357.6388888888889,
+          "p95_latency_us": 60.959,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 2114.0694444444443,
+          "p95_latency_us": 191,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 897.2535211267606,
+          "p95_latency_us": 149.583,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 9489.676056338029,
+          "p95_latency_us": 1093.209,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3778.4225352112676,
+          "p95_latency_us": 393.291,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 6310.859154929577,
+          "p95_latency_us": 832,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_12",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 4442.742,
+      "p50_latency_us": 203.875,
+      "p95_latency_us": 1132.25,
+      "qps": 2563.841433565579,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 412.40277777777777,
+          "p95_latency_us": 104.583,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 12
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 387.30555555555554,
+          "p95_latency_us": 78.625,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 12
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 2286.2083333333335,
+          "p95_latency_us": 246.833,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 12
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 1409.3239436619717,
+          "p95_latency_us": 257.958,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 12
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 13041.661971830987,
+          "p95_latency_us": 1509.625,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 12
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 4268.647887323944,
+          "p95_latency_us": 476.833,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 12
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 9437.901408450703,
+          "p95_latency_us": 1098.209,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 12
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_16",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 5560.906,
+      "p50_latency_us": 244.542,
+      "p95_latency_us": 1464.042,
+      "qps": 1980.4402923571906,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 529.3888888888889,
+          "p95_latency_us": 129.083,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 16
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 401.0833333333333,
+          "p95_latency_us": 92,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 16
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 2430.8888888888887,
+          "p95_latency_us": 304.5,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 16
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 1987.394366197183,
+          "p95_latency_us": 314.375,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 16
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 16692.591549295776,
+          "p95_latency_us": 1822.25,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 16
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 4706.87323943662,
+          "p95_latency_us": 604.208,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 16
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 12365.74647887324,
+          "p95_latency_us": 1381.917,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 16
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_24",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 7528.738,
+      "p50_latency_us": 306.458,
+      "p95_latency_us": 2153.625,
+      "qps": 1381.8882277726789,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 733.7083333333334,
+          "p95_latency_us": 177.625,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 24
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 425.68055555555554,
+          "p95_latency_us": 120,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 24
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 2696.402777777778,
+          "p95_latency_us": 366.292,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 24
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 2927.4084507042253,
+          "p95_latency_us": 403.625,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 24
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 22398.718309859156,
+          "p95_latency_us": 2615.208,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 24
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 5289.619718309859,
+          "p95_latency_us": 788.959,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 24
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 18493.436619718308,
+          "p95_latency_us": 2182.709,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 24
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_32",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 8982.978,
+      "p50_latency_us": 357.167,
+      "p95_latency_us": 2623.958,
+      "qps": 1121.0869161869816,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 913.4861111111111,
+          "p95_latency_us": 217.667,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 32
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 443.1388888888889,
+          "p95_latency_us": 140.292,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 32
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 2888.5416666666665,
+          "p95_latency_us": 419.292,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 32
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3215.211267605634,
+          "p95_latency_us": 472.875,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 32
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 27146.11267605634,
+          "p95_latency_us": 3250.208,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 32
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 5763.450704225352,
+          "p95_latency_us": 973.542,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 32
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 22830.676056338027,
+          "p95_latency_us": 2698.792,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 32
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_64",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 14210.152,
+      "p50_latency_us": 492.042,
+      "p95_latency_us": 4668.375,
+      "qps": 658.84918912281,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 1579,
+          "p95_latency_us": 359.125,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 64
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 450,
+          "p95_latency_us": 200.791,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 64
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3047,
+          "p95_latency_us": 520.292,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 64
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3618,
+          "p95_latency_us": 574.041,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 64
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 48843,
+          "p95_latency_us": 5885.166,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 64
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 6132,
+          "p95_latency_us": 1247.917,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 64
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 36331,
+          "p95_latency_us": 4591,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 64
+        }
+      }
+    }
+  ],
+  "ivf_postfilter_sweep": [
+    {
+      "method": "ivf_postfilter_nprobe_8_top_10",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.6661999999999998,
+      "underfilled": 373,
+      "underfill_rate": 0.746,
+      "mean_evaluated": 15689.072,
+      "p50_latency_us": 2590.25,
+      "p95_latency_us": 3874.834,
+      "qps": 368.10672605279797,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 0.4986111111111111,
+          "underfill_rate": 0.9166666666666666,
+          "mean_evaluated": 15709.736111111111,
+          "p95_latency_us": 3724.75,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.48888888888888904,
+          "underfill_rate": 0.9444444444444444,
+          "mean_evaluated": 15121.652777777777,
+          "p95_latency_us": 3394.792,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 0.5708333333333333,
+          "underfill_rate": 0.9444444444444444,
+          "mean_evaluated": 16108.430555555555,
+          "p95_latency_us": 3422.042,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.7464788732394366,
+          "underfill_rate": 0.6056338028169014,
+          "mean_evaluated": 14478,
+          "p95_latency_us": 3687.958,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 0.8028169014084505,
+          "underfill_rate": 0.5915492957746479,
+          "mean_evaluated": 17442.3661971831,
+          "p95_latency_us": 4328.334,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 0.7577464788732395,
+          "underfill_rate": 0.7183098591549296,
+          "mean_evaluated": 15227.760563380281,
+          "p95_latency_us": 3208.625,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 0.8042253521126759,
+          "underfill_rate": 0.49295774647887325,
+          "mean_evaluated": 15737.352112676057,
+          "p95_latency_us": 4082.166,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_25",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.8798,
+      "underfilled": 130,
+      "underfill_rate": 0.26,
+      "mean_evaluated": 15689.072,
+      "p50_latency_us": 2631.125,
+      "p95_latency_us": 4056.083,
+      "qps": 359.92491252233754,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 0.7305555555555554,
+          "underfill_rate": 0.5416666666666666,
+          "mean_evaluated": 15709.736111111111,
+          "p95_latency_us": 3872.708,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.7527777777777778,
+          "underfill_rate": 0.5,
+          "mean_evaluated": 15121.652777777777,
+          "p95_latency_us": 3664,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 0.8611111111111112,
+          "underfill_rate": 0.3472222222222222,
+          "mean_evaluated": 16108.430555555555,
+          "p95_latency_us": 3730.541,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.9098591549295778,
+          "underfill_rate": 0.16901408450704225,
+          "mean_evaluated": 14478,
+          "p95_latency_us": 3970.584,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 0.9732394366197182,
+          "underfill_rate": 0.07042253521126761,
+          "mean_evaluated": 17442.3661971831,
+          "p95_latency_us": 4452.375,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 0.97887323943662,
+          "underfill_rate": 0.07042253521126761,
+          "mean_evaluated": 15227.760563380281,
+          "p95_latency_us": 3367.584,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 0.9563380281690141,
+          "underfill_rate": 0.11267605633802817,
+          "mean_evaluated": 15737.352112676057,
+          "p95_latency_us": 4132.458,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_50",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.9404000000000001,
+      "underfilled": 66,
+      "underfill_rate": 0.132,
+      "mean_evaluated": 15689.072,
+      "p50_latency_us": 2584.75,
+      "p95_latency_us": 3859.625,
+      "qps": 368.20954095263994,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 0.8402777777777778,
+          "underfill_rate": 0.3472222222222222,
+          "mean_evaluated": 15709.736111111111,
+          "p95_latency_us": 3791.334,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.8833333333333333,
+          "underfill_rate": 0.3055555555555556,
+          "mean_evaluated": 15121.652777777777,
+          "p95_latency_us": 3597.209,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 0.9444444444444446,
+          "underfill_rate": 0.125,
+          "mean_evaluated": 16108.430555555555,
+          "p95_latency_us": 3510.666,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.9436619718309861,
+          "underfill_rate": 0.08450704225352113,
+          "mean_evaluated": 14478,
+          "p95_latency_us": 3742.375,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 0.9901408450704225,
+          "underfill_rate": 0.028169014084507043,
+          "mean_evaluated": 17442.3661971831,
+          "p95_latency_us": 4195.5,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 15227.760563380281,
+          "p95_latency_us": 3204.292,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 0.9830985915492957,
+          "underfill_rate": 0.028169014084507043,
+          "mean_evaluated": 15737.352112676057,
+          "p95_latency_us": 4106,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_100",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.9683999999999999,
+      "underfilled": 39,
+      "underfill_rate": 0.078,
+      "mean_evaluated": 15689.072,
+      "p50_latency_us": 2579.333,
+      "p95_latency_us": 3865.583,
+      "qps": 368.62375366004994,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 0.909722222222222,
+          "underfill_rate": 0.2222222222222222,
+          "mean_evaluated": 15709.736111111111,
+          "p95_latency_us": 3827.625,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.9541666666666667,
+          "underfill_rate": 0.1388888888888889,
+          "mean_evaluated": 15121.652777777777,
+          "p95_latency_us": 3368.875,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 0.9708333333333334,
+          "underfill_rate": 0.06944444444444445,
+          "mean_evaluated": 16108.430555555555,
+          "p95_latency_us": 3656.916,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.9633802816901409,
+          "underfill_rate": 0.07042253521126761,
+          "mean_evaluated": 14478,
+          "p95_latency_us": 3713.709,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 0.995774647887324,
+          "underfill_rate": 0.014084507042253521,
+          "mean_evaluated": 17442.3661971831,
+          "p95_latency_us": 4406.25,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 15227.760563380281,
+          "p95_latency_us": 3199.833,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 0.9859154929577465,
+          "underfill_rate": 0.028169014084507043,
+          "mean_evaluated": 15737.352112676057,
+          "p95_latency_us": 4008.584,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_250",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.9856,
+      "underfilled": 14,
+      "underfill_rate": 0.028,
+      "mean_evaluated": 15689.072,
+      "p50_latency_us": 2660.125,
+      "p95_latency_us": 4197.125,
+      "qps": 343.74384483677835,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 0.9597222222222224,
+          "underfill_rate": 0.08333333333333333,
+          "mean_evaluated": 15709.736111111111,
+          "p95_latency_us": 4138,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.9819444444444445,
+          "underfill_rate": 0.027777777777777776,
+          "mean_evaluated": 15121.652777777777,
+          "p95_latency_us": 3746.75,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 0.9805555555555556,
+          "underfill_rate": 0.027777777777777776,
+          "mean_evaluated": 16108.430555555555,
+          "p95_latency_us": 3767.542,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.9774647887323944,
+          "underfill_rate": 0.056338028169014086,
+          "mean_evaluated": 14478,
+          "p95_latency_us": 4040.083,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 17442.3661971831,
+          "p95_latency_us": 4534.709,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 15227.760563380281,
+          "p95_latency_us": 3340.708,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 15737.352112676057,
+          "p95_latency_us": 4284.834,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_500",
+      "queries": 500,
+      "non_empty_queries": 500,
+      "empty_queries": 0,
+      "recall_at_k": 0.9924,
+      "underfilled": 11,
+      "underfill_rate": 0.022,
+      "mean_evaluated": 15689.072,
+      "p50_latency_us": 2590.959,
+      "p95_latency_us": 3930.125,
+      "qps": 366.8291818741696,
+      "by_category": {
+        "aspen": {
+          "category": "aspen",
+          "queries": 72,
+          "recall_at_k": 0.9777777777777779,
+          "underfill_rate": 0.06944444444444445,
+          "mean_evaluated": 15709.736111111111,
+          "p95_latency_us": 3930.125,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "cottonwood_willow": {
+          "category": "cottonwood_willow",
+          "queries": 72,
+          "recall_at_k": 0.9888888888888889,
+          "underfill_rate": 0.013888888888888888,
+          "mean_evaluated": 15121.652777777777,
+          "p95_latency_us": 3523.333,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "douglas_fir": {
+          "category": "douglas_fir",
+          "queries": 72,
+          "recall_at_k": 0.9944444444444444,
+          "underfill_rate": 0.013888888888888888,
+          "mean_evaluated": 16108.430555555555,
+          "p95_latency_us": 3464.958,
+          "exact_routes": 0,
+          "ivf_routes": 72,
+          "mean_nprobe": 8
+        },
+        "krummholz": {
+          "category": "krummholz",
+          "queries": 71,
+          "recall_at_k": 0.9859154929577465,
+          "underfill_rate": 0.056338028169014086,
+          "mean_evaluated": 14478,
+          "p95_latency_us": 3932.667,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "lodgepole_pine": {
+          "category": "lodgepole_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 17442.3661971831,
+          "p95_latency_us": 4262.292,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "ponderosa_pine": {
+          "category": "ponderosa_pine",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 15227.760563380281,
+          "p95_latency_us": 3185.042,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        },
+        "spruce_fir": {
+          "category": "spruce_fir",
+          "queries": 71,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 15737.352112676057,
+          "p95_latency_us": 4078.917,
+          "exact_routes": 0,
+          "ivf_routes": 71,
+          "mean_nprobe": 8
+        }
+      }
+    }
+  ],
+  "http_load_normal": {
+    "concurrency": 8,
+    "max_in_flight": 16,
+    "total_requests": 1000,
+    "succeeded": 1000,
+    "rejected_429": 0,
+    "timed_out": 0,
+    "other_errors": 0,
+    "throughput_qps": 22175.940541513406,
+    "engine_p50_us": 142.167,
+    "engine_p95_us": 734,
+    "http_client_p50_us": 263.416,
+    "http_client_p95_us": 887.875
+  },
+  "http_load_saturated": {
+    "concurrency": 16,
+    "max_in_flight": 2,
+    "total_requests": 1000,
+    "succeeded": 63,
+    "rejected_429": 937,
+    "timed_out": 0,
+    "other_errors": 0,
+    "throughput_qps": 5936.09259249139,
+    "engine_p50_us": 176.875,
+    "engine_p95_us": 749.5,
+    "http_client_p50_us": 354.167,
+    "http_client_p95_us": 1101.292
+  }
+}

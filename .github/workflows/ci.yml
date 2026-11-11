@@ -15,5 +15,5 @@ jobs:
           go-version: "1.23.x"
       - name: Run unit, planner, and race tests
         run: go test -race -v ./...
-      - name: Run small benchmark
-        run: go run ./cmd/bench -scale small
+      - name: Run small benchmark on synthetic and public UCI Covertype corpora
+        run: go run ./cmd/bench -scale small -corpus both
