@@ -2,10 +2,14 @@ package vecsearch
 
 import (
 	"cmp"
+	"context"
 	"errors"
+	"fmt"
 	"math"
+	"net/http/httptest"
 	"slices"
 	"testing"
+	"time"
 )
 
 // bruteForceSearch is an independent reference implementation that scans the raw
@@ -523,4 +527,205 @@ func TestIVFValidation(t *testing.T) {
 		t.Fatalf("expected ErrInvalidNProbe, got %v", err)
 	}
 }
+
+func TestPlannersConcentratedVsDispersed(t *testing.T) {
+	wl := NewBenchmarkWorkload(42, 6000, 32, 32, 80, 200)
+	engine, err := NewEngine(wl.Dim, wl.Docs, wl.NumClusters, 42)
+	if err != nil {
+		t.Fatalf("NewEngine failed: %v", err)
+	}
+
+	const k = 10
+	exactTruth, err := ComputeExactGroundTruth(engine.Exact, wl.HeldOutQueries, k)
+	if err != nil {
+		t.Fatalf("ComputeExactGroundTruth failed: %v", err)
+	}
+
+	ctx := context.Background()
+	sizePlanner := DefaultSizeOnlyPlanner()
+	clusterPlanner := DefaultClusterAwarePlanner()
+
+	sizeMetrics, err := EvaluateMethod("size_only", wl.HeldOutQueries, exactTruth, k, 0, 1,
+		func(q WorkloadQuery) ([]Result, Route, int, int, error) {
+			res, plan, eval, err := engine.Execute(ctx, sizePlanner, q.Vector, q.Category, k)
+			return res, plan.Route, plan.NProbe, eval, err
+		})
+	if err != nil {
+		t.Fatalf("size_only eval failed: %v", err)
+	}
+
+	clusterMetrics, err := EvaluateMethod("cluster_aware", wl.HeldOutQueries, exactTruth, k, 0, 1,
+		func(q WorkloadQuery) ([]Result, Route, int, int, error) {
+			res, plan, eval, err := engine.Execute(ctx, clusterPlanner, q.Vector, q.Category, k)
+			return res, plan.Route, plan.NProbe, eval, err
+		})
+	if err != nil {
+		t.Fatalf("cluster_aware eval failed: %v", err)
+	}
+
+	// Verify cat_concentrated and cat_dispersed have identical corpus counts.
+	concDocs := engine.Exact.CategoryCount("cat_concentrated")
+	dispDocs := engine.Exact.CategoryCount("cat_dispersed")
+	if concDocs != dispDocs {
+		t.Fatalf("expected equal category sizes, got concentrated=%d vs dispersed=%d", concDocs, dispDocs)
+	}
+
+	sizeDisp := sizeMetrics.ByCategory["cat_dispersed"]
+	clusterDisp := clusterMetrics.ByCategory["cat_dispersed"]
+	sizeConc := sizeMetrics.ByCategory["cat_concentrated"]
+	clusterConc := clusterMetrics.ByCategory["cat_concentrated"]
+
+	t.Logf("cat_concentrated (docs=%d): size_only recall=%.4f (underfill=%.4f) vs cluster_aware recall=%.4f (underfill=%.4f)",
+		concDocs, sizeConc.RecallAtK, sizeConc.UnderfillRate, clusterConc.RecallAtK, clusterConc.UnderfillRate)
+	t.Logf("cat_dispersed    (docs=%d): size_only recall=%.4f (underfill=%.4f) vs cluster_aware recall=%.4f (underfill=%.4f)",
+		dispDocs, sizeDisp.RecallAtK, sizeDisp.UnderfillRate, clusterDisp.RecallAtK, clusterDisp.UnderfillRate)
+
+	if clusterDisp.RecallAtK <= sizeDisp.RecallAtK {
+		t.Fatalf("expected cluster_aware recall (%.4f) > size_only recall (%.4f) on cat_dispersed",
+			clusterDisp.RecallAtK, sizeDisp.RecallAtK)
+	}
+	if clusterConc.RecallAtK < sizeConc.RecallAtK {
+		t.Fatalf("expected cluster_aware recall (%.4f) >= size_only recall (%.4f) on cat_concentrated",
+			clusterConc.RecallAtK, sizeConc.RecallAtK)
+	}
+}
+
+func TestClusterAwarePlannerFailureCase(t *testing.T) {
+	// Failure case: Cluster 0 (around x=-1) contains 50 "target_cat" docs at (-1, 0),
+	// satisfying the planner's candidate count threshold in a single cluster.
+	// Cluster 1 (around x=10) is dominated by "other" docs at (10.5, 0) plus one
+	// "target_cat" boundary outlier ("target-boundary-winner") at (5.5, 0).
+	// Query (4.0, 0) is closer to Cluster 0's centroid (-1, 0) than Cluster 1's centroid (~10.4, 0),
+	// and because Cluster 0 already holds 50 eligible docs, ClusterAwarePlanner (with BaseNProbe=1)
+	// stops after Cluster 0 and misses "target-boundary-winner" in Cluster 1.
+	var docs []Document
+	for i := range 50 {
+		docs = append(docs, Document{
+			ID:       fmt.Sprintf("target-c0-%02d", i),
+			Category: "target_cat",
+			Vector:   []float32{-1.0, 0.0},
+		})
+	}
+	for i := range 49 {
+		docs = append(docs, Document{
+			ID:       fmt.Sprintf("other-c1-%02d", i),
+			Category: "other",
+			Vector:   []float32{10.5, 0.0},
+		})
+	}
+	docs = append(docs, Document{
+		ID:       "target-boundary-winner",
+		Category: "target_cat",
+		Vector:   []float32{5.5, 0.0},
+	})
+
+	engine, err := NewEngine(2, docs, 2, 7)
+	if err != nil {
+		t.Fatalf("NewEngine failed: %v", err)
+	}
+
+	planner := ClusterAwarePlanner{
+		MaxExactSelectivity: 0.01,
+		MaxExactDocs:        5,
+		BaseNProbe:          1,
+		MaxNProbe:           2,
+		MaxScanClusters:     2,
+		TargetMultipleOfK:   10,
+	}
+
+	query := []float32{4.0, 0.0}
+	exactRes, err := engine.Exact.Search(query, "target_cat", 1)
+	if err != nil {
+		t.Fatalf("Exact.Search failed: %v", err)
+	}
+	if exactRes[0].ID != "target-boundary-winner" {
+		t.Fatalf("expected exact winner target-boundary-winner, got %+v", exactRes)
+	}
+
+	plannedRes, plan, eval, err := engine.Execute(context.Background(), planner, query, "target_cat", 1)
+	if err != nil {
+		t.Fatalf("Engine.Execute failed: %v", err)
+	}
+	rec, _ := RecallAtK(exactRes, plannedRes)
+	if plan.NProbe != 1 || rec != 0.0 {
+		t.Fatalf("expected planner to stop at nprobe=1 (50 eligible docs in nearest cluster) and miss boundary winner, got plan=%+v res=%+v recall=%v",
+			plan, plannedRes, rec)
+	}
+	t.Logf("Planner failure case verified: nearest cluster has %d eligible docs >= target, so planner chose nprobe=%d (eval=%d) and returned %s(dist=%.2f) instead of %s(dist=%.2f)",
+		plan.ExpectedEligible, plan.NProbe, eval, plannedRes[0].ID, plannedRes[0].Distance, exactRes[0].ID, exactRes[0].Distance)
+}
+
+func TestSearchCancellation(t *testing.T) {
+	wl := NewSeededWorkload(42, 1000, 5, 16)
+	engine, err := NewEngine(wl.Dim, wl.Docs, 8, 42)
+	if err != nil {
+		t.Fatalf("NewEngine failed: %v", err)
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	if _, _, err := engine.Exact.SearchContext(ctx, wl.Queries[0], "electronics", 10); !errors.Is(err, context.Canceled) {
+		t.Fatalf("expected context.Canceled from ExactIndex.SearchContext, got %v", err)
+	}
+	if _, _, err := engine.IVF.SearchPreFilterContext(ctx, wl.Queries[0], "electronics", 10, 4); !errors.Is(err, context.Canceled) {
+		t.Fatalf("expected context.Canceled from IVFIndex.SearchPreFilterContext, got %v", err)
+	}
+	if _, _, _, err := engine.Execute(ctx, DefaultClusterAwarePlanner(), wl.Queries[0], "electronics", 10); !errors.Is(err, context.Canceled) {
+		t.Fatalf("expected context.Canceled from Engine.Execute, got %v", err)
+	}
+}
+
+func TestServerBoundedConcurrencyAndLoad(t *testing.T) {
+	wl := NewBenchmarkWorkload(42, 2000, 16, 16, 20, 50)
+	engine, err := NewEngine(wl.Dim, wl.Docs, wl.NumClusters, 42)
+	if err != nil {
+		t.Fatalf("NewEngine failed: %v", err)
+	}
+
+	srv := httptest.NewServer(NewSearchServer(engine, DefaultClusterAwarePlanner(), 8, 200*time.Millisecond))
+	defer srv.Close()
+
+	report, err := RunHTTPLoadTest(srv.URL, wl.HeldOutQueries, 10, 4, 8, 200, 200*time.Millisecond)
+	if err != nil {
+		t.Fatalf("RunHTTPLoadTest failed: %v", err)
+	}
+	if report.Succeeded == 0 || report.OtherErrors > 0 {
+		t.Fatalf("unexpected load test report: %+v", report)
+	}
+	if report.EngineP50Us <= 0 || report.HTTPClientP50Us <= report.EngineP50Us {
+		t.Fatalf("expected separate positive engine (%v us) < http (%v us) latencies", report.EngineP50Us, report.HTTPClientP50Us)
+	}
+}
+
+func BenchmarkExactSearch(b *testing.B) {
+	wl := NewSeededWorkload(42, 10000, 100, 64)
+	idx, err := NewExactIndex(wl.Dim, wl.Docs)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		q := wl.Queries[i%len(wl.Queries)]
+		if _, err := idx.Search(q, "electronics", 10); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkIVFPreFilterSearch(b *testing.B) {
+	wl := NewSeededWorkload(42, 10000, 100, 64)
+	idx, err := NewIVFIndex(wl.Dim, wl.Docs, 64, 42)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		q := wl.Queries[i%len(wl.Queries)]
+		if _, _, err := idx.SearchPreFilter(q, "electronics", 10, 4); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
 

@@ -2,7 +2,7 @@ package vecsearch
 
 import (
 	"cmp"
-	"container/heap"
+	"context"
 	"errors"
 	"fmt"
 	"math"
@@ -90,20 +90,43 @@ func validateAndCopyCorpus(dim int, docs []Document) ([]string, []string, []floa
 	return ids, categories, vectors, nil
 }
 
+// CategoryCount returns the number of documents indexed under category.
+func (idx *ExactIndex) CategoryCount(category string) int {
+	return len(idx.byCategory[category])
+}
+
+// NumDocs returns the total number of documents in the corpus.
+func (idx *ExactIndex) NumDocs() int {
+	return len(idx.ids)
+}
+
+// Dim returns the vector dimensionality of the index.
+func (idx *ExactIndex) Dim() int {
+	return idx.dim
+}
+
 // Search returns up to k closest documents in category ordered by (Distance ASC, ID ASC).
 func (idx *ExactIndex) Search(query []float32, category string, k int) ([]Result, error) {
-	results, _, err := idx.SearchWithStats(query, category, k)
+	results, _, err := idx.SearchContext(context.Background(), query, category, k)
 	return results, err
 }
 
 // SearchWithStats returns up to k closest documents in category along with the
 // number of candidate document vectors scored.
 func (idx *ExactIndex) SearchWithStats(query []float32, category string, k int) ([]Result, int, error) {
+	return idx.SearchContext(context.Background(), query, category, k)
+}
+
+// SearchContext executes exact filtered search and checks ctx for cancellation during long scans.
+func (idx *ExactIndex) SearchContext(ctx context.Context, query []float32, category string, k int) ([]Result, int, error) {
 	if k <= 0 {
 		return nil, 0, fmt.Errorf("%w: k=%d", ErrInvalidK, k)
 	}
 	if err := validateVector(idx.dim, query); err != nil {
 		return nil, 0, fmt.Errorf("query: %w", err)
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, 0, err
 	}
 
 	postings := idx.byCategory[category]
@@ -112,23 +135,27 @@ func (idx *ExactIndex) SearchWithStats(query []float32, category string, k int) 
 	}
 
 	target := min(k, len(postings))
-	h := make(resultMaxHeap, 0, target)
+	results := make([]Result, 0, target)
 
-	for _, docIdx := range postings {
+	for i, docIdx := range postings {
+		if i&255 == 0 && i > 0 {
+			if err := ctx.Err(); err != nil {
+				return nil, i, err
+			}
+		}
 		vec := idx.vectors[docIdx*idx.dim : (docIdx+1)*idx.dim]
 		cand := Result{
 			ID:       idx.ids[docIdx],
 			Distance: squaredL2(query, vec),
 		}
-		if len(h) < target {
-			heap.Push(&h, cand)
-		} else if betterResult(cand, h[0]) {
-			h[0] = cand
-			heap.Fix(&h, 0)
+		if len(results) < target {
+			results = pushResultHeap(results, cand)
+		} else if betterResult(cand, results[0]) {
+			results[0] = cand
+			siftDownResultHeap(results, 0)
 		}
 	}
 
-	results := []Result(h)
 	slices.SortFunc(results, compareResult)
 	return results, len(postings), nil
 }
@@ -147,9 +174,19 @@ func validateVector(dim int, vec []float32) error {
 
 // squaredL2 converts coordinates to float64 before subtraction so large float32
 // magnitudes neither overflow during subtraction nor saturate to +Inf when squared.
+// Unrolled 4-wide with left-associative accumulation to preserve bit-identical IEEE-754 sums.
 func squaredL2(a, b []float32) float64 {
 	var sum float64
-	for i := range a {
+	i := 0
+	n := len(a)
+	for ; i+3 < n; i += 4 {
+		d0 := float64(a[i]) - float64(b[i])
+		d1 := float64(a[i+1]) - float64(b[i+1])
+		d2 := float64(a[i+2]) - float64(b[i+2])
+		d3 := float64(a[i+3]) - float64(b[i+3])
+		sum = sum + d0*d0 + d1*d1 + d2*d2 + d3*d3
+	}
+	for ; i < n; i++ {
 		d := float64(a[i]) - float64(b[i])
 		sum += d * d
 	}
@@ -167,19 +204,39 @@ func betterResult(a, b Result) bool {
 	return compareResult(a, b) < 0
 }
 
-// resultMaxHeap keeps the worst (largest Distance, or largest ID on tie) at index 0.
-type resultMaxHeap []Result
+// Typed max-heap helpers avoid container/heap interface{} boxing allocations on every push.
+// Index 0 always holds the worst element currently retained (largest Distance, or largest ID on tie).
+func pushResultHeap(h []Result, item Result) []Result {
+	h = append(h, item)
+	i := len(h) - 1
+	for i > 0 {
+		parent := (i - 1) >> 1
+		if !betterResult(h[parent], h[i]) {
+			break
+		}
+		h[parent], h[i] = h[i], h[parent]
+		i = parent
+	}
+	return h
+}
 
-func (h resultMaxHeap) Len() int           { return len(h) }
-func (h resultMaxHeap) Less(i, j int) bool { return betterResult(h[j], h[i]) }
-func (h resultMaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-func (h *resultMaxHeap) Push(x any)        { *h = append(*h, x.(Result)) }
-func (h *resultMaxHeap) Pop() any {
-	old := *h
-	n := len(old)
-	item := old[n-1]
-	*h = old[:n-1]
-	return item
+func siftDownResultHeap(h []Result, i int) {
+	n := len(h)
+	for {
+		left := 2*i + 1
+		if left >= n {
+			break
+		}
+		worst := left
+		if right := left + 1; right < n && betterResult(h[left], h[right]) {
+			worst = right
+		}
+		if !betterResult(h[i], h[worst]) {
+			break
+		}
+		h[i], h[worst] = h[worst], h[i]
+		i = worst
+	}
 }
 
 // SeededWorkload holds a deterministic synthetic corpus and query set.

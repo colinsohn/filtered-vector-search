@@ -1,0 +1,1345 @@
+{
+  "scale": "small",
+  "timestamp": "2026-11-11T04:10:33Z",
+  "go_version": "go1.27.4",
+  "goos": "darwin",
+  "goarch": "arm64",
+  "num_cpu": 8,
+  "corpus_docs": 20000,
+  "dim": 64,
+  "num_clusters": 64,
+  "k": 10,
+  "dev_queries": 200,
+  "held_out_queries": 500,
+  "index_build_ms": 1146.318333,
+  "corpus_memory_bytes": 11649792,
+  "category_specs": [
+    {
+      "name": "cat_rare",
+      "distribution": "concentrated",
+      "selectivity": 0.005,
+      "num_clusters": 2,
+      "doc_count": 100
+    },
+    {
+      "name": "cat_concentrated",
+      "distribution": "concentrated",
+      "selectivity": 0.025,
+      "num_clusters": 3,
+      "doc_count": 500
+    },
+    {
+      "name": "cat_dispersed",
+      "distribution": "dispersed",
+      "selectivity": 0.025,
+      "num_clusters": 64,
+      "doc_count": 500
+    },
+    {
+      "name": "cat_medium",
+      "distribution": "concentrated",
+      "selectivity": 0.15,
+      "num_clusters": 10,
+      "doc_count": 3000
+    },
+    {
+      "name": "cat_common",
+      "distribution": "dispersed",
+      "selectivity": 0.795,
+      "num_clusters": 64,
+      "doc_count": 15900
+    }
+  ],
+  "exact": {
+    "method": "exact",
+    "queries": 500,
+    "non_empty_queries": 480,
+    "empty_queries": 20,
+    "recall_at_k": 1,
+    "underfilled": 0,
+    "underfill_rate": 0,
+    "mean_evaluated": 3504.1666666666665,
+    "p50_latency_us": 37.167,
+    "p95_latency_us": 1019.541,
+    "qps": 4774.581396772403,
+    "by_category": {
+      "cat_common": {
+        "category": "cat_common",
+        "queries": 80,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 15900,
+        "p95_latency_us": 1199.333,
+        "exact_routes": 80,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "cat_concentrated": {
+        "category": "cat_concentrated",
+        "queries": 100,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 500,
+        "p95_latency_us": 47.125,
+        "exact_routes": 100,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "cat_dispersed": {
+        "category": "cat_dispersed",
+        "queries": 100,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 500,
+        "p95_latency_us": 47.584,
+        "exact_routes": 100,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "cat_medium": {
+        "category": "cat_medium",
+        "queries": 100,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 3000,
+        "p95_latency_us": 255.292,
+        "exact_routes": 100,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      },
+      "cat_rare": {
+        "category": "cat_rare",
+        "queries": 100,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 100,
+        "p95_latency_us": 12.208,
+        "exact_routes": 100,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      }
+    }
+  },
+  "size_only_planner": {
+    "method": "size_only_planner",
+    "queries": 500,
+    "non_empty_queries": 480,
+    "empty_queries": 20,
+    "recall_at_k": 0.8997916666666667,
+    "underfilled": 36,
+    "underfill_rate": 0.075,
+    "mean_evaluated": 383.24791666666664,
+    "p50_latency_us": 17.084,
+    "p95_latency_us": 116.125,
+    "qps": 32897.442223867096,
+    "by_category": {
+      "cat_common": {
+        "category": "cat_common",
+        "queries": 80,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 1562.975,
+        "p95_latency_us": 146.584,
+        "exact_routes": 0,
+        "ivf_routes": 80,
+        "mean_nprobe": 4
+      },
+      "cat_concentrated": {
+        "category": "cat_concentrated",
+        "queries": 100,
+        "recall_at_k": 0.84,
+        "underfill_rate": 0.16,
+        "mean_evaluated": 159.14,
+        "p95_latency_us": 32.375,
+        "exact_routes": 0,
+        "ivf_routes": 100,
+        "mean_nprobe": 4
+      },
+      "cat_dispersed": {
+        "category": "cat_dispersed",
+        "queries": 100,
+        "recall_at_k": 0.902,
+        "underfill_rate": 0.01,
+        "mean_evaluated": 55.62,
+        "p95_latency_us": 17.084,
+        "exact_routes": 0,
+        "ivf_routes": 100,
+        "mean_nprobe": 4
+      },
+      "cat_medium": {
+        "category": "cat_medium",
+        "queries": 100,
+        "recall_at_k": 0.7769999999999999,
+        "underfill_rate": 0.19,
+        "mean_evaluated": 274.45,
+        "p95_latency_us": 51.125,
+        "exact_routes": 0,
+        "ivf_routes": 100,
+        "mean_nprobe": 4
+      },
+      "cat_rare": {
+        "category": "cat_rare",
+        "queries": 100,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 100,
+        "p95_latency_us": 8.333,
+        "exact_routes": 100,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      }
+    }
+  },
+  "cluster_aware_planner": {
+    "method": "cluster_aware_planner",
+    "queries": 500,
+    "non_empty_queries": 480,
+    "empty_queries": 20,
+    "recall_at_k": 0.977708333333333,
+    "underfilled": 0,
+    "underfill_rate": 0,
+    "mean_evaluated": 443.1020833333333,
+    "p50_latency_us": 28.75,
+    "p95_latency_us": 83.208,
+    "qps": 29565.922585692097,
+    "by_category": {
+      "cat_common": {
+        "category": "cat_common",
+        "queries": 80,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 1109.1,
+        "p95_latency_us": 117.292,
+        "exact_routes": 0,
+        "ivf_routes": 80,
+        "mean_nprobe": 3
+      },
+      "cat_concentrated": {
+        "category": "cat_concentrated",
+        "queries": 100,
+        "recall_at_k": 0.995,
+        "underfill_rate": 0,
+        "mean_evaluated": 333.29,
+        "p95_latency_us": 37.167,
+        "exact_routes": 1,
+        "ivf_routes": 99,
+        "mean_nprobe": 2.4343434343434343
+      },
+      "cat_dispersed": {
+        "category": "cat_dispersed",
+        "queries": 100,
+        "recall_at_k": 0.9480000000000003,
+        "underfill_rate": 0,
+        "mean_evaluated": 89.77,
+        "p95_latency_us": 20.542,
+        "exact_routes": 0,
+        "ivf_routes": 100,
+        "mean_nprobe": 6.37
+      },
+      "cat_medium": {
+        "category": "cat_medium",
+        "queries": 100,
+        "recall_at_k": 0.95,
+        "underfill_rate": 0,
+        "mean_evaluated": 716.55,
+        "p95_latency_us": 67.667,
+        "exact_routes": 0,
+        "ivf_routes": 100,
+        "mean_nprobe": 2.97
+      },
+      "cat_rare": {
+        "category": "cat_rare",
+        "queries": 100,
+        "recall_at_k": 1,
+        "underfill_rate": 0,
+        "mean_evaluated": 100,
+        "p95_latency_us": 8.125,
+        "exact_routes": 100,
+        "ivf_routes": 0,
+        "mean_nprobe": 0
+      }
+    }
+  },
+  "ivf_prefilter_sweep": [
+    {
+      "method": "ivf_prefilter_nprobe_1",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.7316666666666667,
+      "underfilled": 129,
+      "underfill_rate": 0.26875,
+      "mean_evaluated": 128.13333333333333,
+      "p50_latency_us": 12.625,
+      "p95_latency_us": 38.541,
+      "qps": 57394.573343090415,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 0.9512500000000002,
+          "underfill_rate": 0,
+          "mean_evaluated": 340.9375,
+          "p95_latency_us": 66.792,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 1
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.716,
+          "underfill_rate": 0.18,
+          "mean_evaluated": 117.23,
+          "p95_latency_us": 24.875,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 1
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.737,
+          "underfill_rate": 0.49,
+          "mean_evaluated": 11.22,
+          "p95_latency_us": 12,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 1
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.6229999999999999,
+          "underfill_rate": 0.3,
+          "mean_evaluated": 179.74,
+          "p95_latency_us": 34.458,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 1
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.675,
+          "underfill_rate": 0.32,
+          "mean_evaluated": 34.1,
+          "p95_latency_us": 15.417,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 1
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_2",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.8031250000000002,
+      "underfilled": 90,
+      "underfill_rate": 0.1875,
+      "mean_evaluated": 214.66458333333333,
+      "p50_latency_us": 15.833,
+      "p95_latency_us": 63.625,
+      "qps": 46746.811477900446,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 0.9974999999999999,
+          "underfill_rate": 0,
+          "mean_evaluated": 740.825,
+          "p95_latency_us": 88.292,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 2
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.84,
+          "underfill_rate": 0.16,
+          "mean_evaluated": 144.35,
+          "p95_latency_us": 22.584,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 2
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.8379999999999996,
+          "underfill_rate": 0.16,
+          "mean_evaluated": 29.75,
+          "p95_latency_us": 13.042,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 2
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.7030000000000001,
+          "underfill_rate": 0.27,
+          "mean_evaluated": 218.2,
+          "p95_latency_us": 35.041,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 2
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.6759999999999999,
+          "underfill_rate": 0.31,
+          "mean_evaluated": 45.43,
+          "p95_latency_us": 16.958,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 2
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_4",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.838125,
+      "underfilled": 63,
+      "underfill_rate": 0.13125,
+      "mean_evaluated": 373.73333333333335,
+      "p50_latency_us": 18.5,
+      "p95_latency_us": 119.875,
+      "qps": 30043.03665000113,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 1562.975,
+          "p95_latency_us": 155.458,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 4
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.84,
+          "underfill_rate": 0.16,
+          "mean_evaluated": 159.14,
+          "p95_latency_us": 34.083,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 4
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.902,
+          "underfill_rate": 0.01,
+          "mean_evaluated": 55.62,
+          "p95_latency_us": 18,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 4
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.7769999999999999,
+          "underfill_rate": 0.19,
+          "mean_evaluated": 274.45,
+          "p95_latency_us": 55.125,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 4
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.7040000000000001,
+          "underfill_rate": 0.27,
+          "mean_evaluated": 54.33,
+          "p95_latency_us": 18.542,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 4
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_8",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.8831249999999999,
+      "underfilled": 42,
+      "underfill_rate": 0.0875,
+      "mean_evaluated": 686.6916666666667,
+      "p50_latency_us": 21.625,
+      "p95_latency_us": 210.875,
+      "qps": 19264.358368437275,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3131.3125,
+          "p95_latency_us": 236.667,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 8
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.86,
+          "underfill_rate": 0.14,
+          "mean_evaluated": 197.14,
+          "p95_latency_us": 34.667,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.9640000000000001,
+          "underfill_rate": 0,
+          "mean_evaluated": 101.67,
+          "p95_latency_us": 22.25,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.847,
+          "underfill_rate": 0.08,
+          "mean_evaluated": 427.46,
+          "p95_latency_us": 74.583,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.7680000000000001,
+          "underfill_rate": 0.2,
+          "mean_evaluated": 64.8,
+          "p95_latency_us": 19.708,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_12",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.9104166666666665,
+      "underfilled": 30,
+      "underfill_rate": 0.0625,
+      "mean_evaluated": 940.0541666666667,
+      "p50_latency_us": 25.75,
+      "p95_latency_us": 283.959,
+      "qps": 14566.984301054194,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 4379.675,
+          "p95_latency_us": 311.959,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 12
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.888,
+          "underfill_rate": 0.11,
+          "mean_evaluated": 233.22,
+          "p95_latency_us": 38.25,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 12
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.977,
+          "underfill_rate": 0,
+          "mean_evaluated": 139.41,
+          "p95_latency_us": 27.459,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 12
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.9030000000000001,
+          "underfill_rate": 0.03,
+          "mean_evaluated": 564.01,
+          "p95_latency_us": 96.375,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 12
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.802,
+          "underfill_rate": 0.16,
+          "mean_evaluated": 71.88,
+          "p95_latency_us": 21.292,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 12
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_16",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.9441666666666666,
+      "underfilled": 17,
+      "underfill_rate": 0.035416666666666666,
+      "mean_evaluated": 1175.7854166666666,
+      "p50_latency_us": 32.333,
+      "p95_latency_us": 356.167,
+      "qps": 11493.449212842397,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 5507.0875,
+          "p95_latency_us": 392.375,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 16
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.9189999999999999,
+          "underfill_rate": 0.07,
+          "mean_evaluated": 257.31,
+          "p95_latency_us": 47.542,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 16
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.9910000000000001,
+          "underfill_rate": 0,
+          "mean_evaluated": 174.51,
+          "p95_latency_us": 35.458,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 16
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.926,
+          "underfill_rate": 0.01,
+          "mean_evaluated": 725.95,
+          "p95_latency_us": 116.541,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 16
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.8960000000000001,
+          "underfill_rate": 0.09,
+          "mean_evaluated": 80.33,
+          "p95_latency_us": 28.666,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 16
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_24",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.9812499999999998,
+      "underfilled": 5,
+      "underfill_rate": 0.010416666666666666,
+      "mean_evaluated": 1621.8583333333333,
+      "p50_latency_us": 40.375,
+      "p95_latency_us": 480.25,
+      "qps": 8482.53566923214,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 7508.3,
+          "p95_latency_us": 521.167,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 24
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.9669999999999999,
+          "underfill_rate": 0.02,
+          "mean_evaluated": 319.24,
+          "p95_latency_us": 52.709,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 24
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.9980000000000001,
+          "underfill_rate": 0,
+          "mean_evaluated": 235.03,
+          "p95_latency_us": 49.375,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 24
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.986,
+          "underfill_rate": 0,
+          "mean_evaluated": 1133.62,
+          "p95_latency_us": 155.834,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 24
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.9590000000000001,
+          "underfill_rate": 0.03,
+          "mean_evaluated": 90.39,
+          "p95_latency_us": 32.084,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 24
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_32",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.9968749999999997,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 2030.775,
+      "p50_latency_us": 46.541,
+      "p95_latency_us": 587.709,
+      "qps": 6809.852625527784,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 9356.4625,
+          "p95_latency_us": 662.5,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 32
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.9970000000000002,
+          "underfill_rate": 0,
+          "mean_evaluated": 361.55,
+          "p95_latency_us": 58,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 32
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 290.69,
+          "p95_latency_us": 54.5,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 32
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.995,
+          "underfill_rate": 0,
+          "mean_evaluated": 1513.33,
+          "p95_latency_us": 188.916,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 32
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.9930000000000001,
+          "underfill_rate": 0,
+          "mean_evaluated": 96.98,
+          "p95_latency_us": 36,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 32
+        }
+      }
+    },
+    {
+      "method": "ivf_prefilter_nprobe_64",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 1,
+      "underfilled": 0,
+      "underfill_rate": 0,
+      "mean_evaluated": 3504.1666666666665,
+      "p50_latency_us": 72.042,
+      "p95_latency_us": 991.959,
+      "qps": 4096.4434754213335,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 15900,
+          "p95_latency_us": 1060.708,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 64
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 500,
+          "p95_latency_us": 71.625,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 64
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 500,
+          "p95_latency_us": 84.083,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 64
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3000,
+          "p95_latency_us": 281.042,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 64
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 100,
+          "p95_latency_us": 44.625,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 64
+        }
+      }
+    }
+  ],
+  "ivf_postfilter_sweep": [
+    {
+      "method": "ivf_postfilter_nprobe_8_top_10",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.36270833333333297,
+      "underfilled": 438,
+      "underfill_rate": 0.9125,
+      "mean_evaluated": 3592.7229166666666,
+      "p50_latency_us": 556.166,
+      "p95_latency_us": 722.875,
+      "qps": 1793.4912416523161,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 0.85,
+          "underfill_rate": 0.4875,
+          "mean_evaluated": 3640.775,
+          "p95_latency_us": 719.833,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 8
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.37999999999999995,
+          "underfill_rate": 0.99,
+          "mean_evaluated": 3638.1,
+          "p95_latency_us": 707.625,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.10099999999999985,
+          "underfill_rate": 1,
+          "mean_evaluated": 3567.69,
+          "p95_latency_us": 709.708,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.41200000000000025,
+          "underfill_rate": 1,
+          "mean_evaluated": 3784.96,
+          "p95_latency_us": 742.667,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.16800000000000004,
+          "underfill_rate": 1,
+          "mean_evaluated": 3341.7,
+          "p95_latency_us": 693.834,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_25",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.5679166666666663,
+      "underfilled": 278,
+      "underfill_rate": 0.5791666666666667,
+      "mean_evaluated": 3592.7229166666666,
+      "p50_latency_us": 541.291,
+      "p95_latency_us": 696.459,
+      "qps": 1845.3682870691814,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 0.9962500000000001,
+          "underfill_rate": 0.0375,
+          "mean_evaluated": 3640.775,
+          "p95_latency_us": 706.833,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 8
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.7569999999999999,
+          "underfill_rate": 0.45,
+          "mean_evaluated": 3638.1,
+          "p95_latency_us": 696.834,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.14099999999999985,
+          "underfill_rate": 1,
+          "mean_evaluated": 3567.69,
+          "p95_latency_us": 696.834,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.6990000000000001,
+          "underfill_rate": 0.31,
+          "mean_evaluated": 3784.96,
+          "p95_latency_us": 690.542,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.3320000000000001,
+          "underfill_rate": 0.99,
+          "mean_evaluated": 3341.7,
+          "p95_latency_us": 653.166,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_50",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.6410416666666663,
+      "underfilled": 231,
+      "underfill_rate": 0.48125,
+      "mean_evaluated": 3592.7229166666666,
+      "p50_latency_us": 536.167,
+      "p95_latency_us": 693.583,
+      "qps": 1866.0697854192297,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3640.775,
+          "p95_latency_us": 731.791,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 8
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.82,
+          "underfill_rate": 0.18,
+          "mean_evaluated": 3638.1,
+          "p95_latency_us": 655.458,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.20999999999999988,
+          "underfill_rate": 1,
+          "mean_evaluated": 3567.69,
+          "p95_latency_us": 691.209,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.7,
+          "underfill_rate": 0.3,
+          "mean_evaluated": 3784.96,
+          "p95_latency_us": 694.417,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.5470000000000002,
+          "underfill_rate": 0.83,
+          "mean_evaluated": 3341.7,
+          "p95_latency_us": 659.458,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_100",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.6987500000000001,
+      "underfilled": 182,
+      "underfill_rate": 0.37916666666666665,
+      "mean_evaluated": 3592.7229166666666,
+      "p50_latency_us": 551.584,
+      "p95_latency_us": 719.666,
+      "qps": 1797.651369205194,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3640.775,
+          "p95_latency_us": 743,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 8
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.82,
+          "underfill_rate": 0.18,
+          "mean_evaluated": 3638.1,
+          "p95_latency_us": 690.083,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.36499999999999994,
+          "underfill_rate": 1,
+          "mean_evaluated": 3567.69,
+          "p95_latency_us": 719.042,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.7,
+          "underfill_rate": 0.3,
+          "mean_evaluated": 3784.96,
+          "p95_latency_us": 734.708,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.669,
+          "underfill_rate": 0.34,
+          "mean_evaluated": 3341.7,
+          "p95_latency_us": 681.875,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_250",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.7747916666666668,
+      "underfilled": 156,
+      "underfill_rate": 0.325,
+      "mean_evaluated": 3592.7229166666666,
+      "p50_latency_us": 545.541,
+      "p95_latency_us": 694.833,
+      "qps": 1834.5957977932583,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3640.775,
+          "p95_latency_us": 716.959,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 8
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.826,
+          "underfill_rate": 0.18,
+          "mean_evaluated": 3638.1,
+          "p95_latency_us": 680,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.7129999999999999,
+          "underfill_rate": 0.75,
+          "mean_evaluated": 3567.69,
+          "p95_latency_us": 684,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.71,
+          "underfill_rate": 0.3,
+          "mean_evaluated": 3784.96,
+          "p95_latency_us": 691.209,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.67,
+          "underfill_rate": 0.33,
+          "mean_evaluated": 3341.7,
+          "p95_latency_us": 665.209,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        }
+      }
+    },
+    {
+      "method": "ivf_postfilter_nprobe_8_top_500",
+      "queries": 500,
+      "non_empty_queries": 480,
+      "empty_queries": 20,
+      "recall_at_k": 0.8581249999999999,
+      "underfilled": 79,
+      "underfill_rate": 0.16458333333333333,
+      "mean_evaluated": 3592.7229166666666,
+      "p50_latency_us": 537.375,
+      "p95_latency_us": 688.291,
+      "qps": 1861.113861906329,
+      "by_category": {
+        "cat_common": {
+          "category": "cat_common",
+          "queries": 80,
+          "recall_at_k": 1,
+          "underfill_rate": 0,
+          "mean_evaluated": 3640.775,
+          "p95_latency_us": 729.542,
+          "exact_routes": 0,
+          "ivf_routes": 80,
+          "mean_nprobe": 8
+        },
+        "cat_concentrated": {
+          "category": "cat_concentrated",
+          "queries": 100,
+          "recall_at_k": 0.86,
+          "underfill_rate": 0.14,
+          "mean_evaluated": 3638.1,
+          "p95_latency_us": 661.583,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_dispersed": {
+          "category": "cat_dispersed",
+          "queries": 100,
+          "recall_at_k": 0.9130000000000001,
+          "underfill_rate": 0.2,
+          "mean_evaluated": 3567.69,
+          "p95_latency_us": 683.166,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_medium": {
+          "category": "cat_medium",
+          "queries": 100,
+          "recall_at_k": 0.847,
+          "underfill_rate": 0.12,
+          "mean_evaluated": 3784.96,
+          "p95_latency_us": 695,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        },
+        "cat_rare": {
+          "category": "cat_rare",
+          "queries": 100,
+          "recall_at_k": 0.699,
+          "underfill_rate": 0.33,
+          "mean_evaluated": 3341.7,
+          "p95_latency_us": 631.125,
+          "exact_routes": 0,
+          "ivf_routes": 100,
+          "mean_nprobe": 8
+        }
+      }
+    }
+  ],
+  "http_load_normal": {
+    "concurrency": 8,
+    "max_in_flight": 16,
+    "total_requests": 1000,
+    "succeeded": 1000,
+    "rejected_429": 0,
+    "timed_out": 0,
+    "other_errors": 0,
+    "throughput_qps": 43878.89425186485,
+    "engine_p50_us": 32.959,
+    "engine_p95_us": 144.292,
+    "http_client_p50_us": 145.791,
+    "http_client_p95_us": 305.333
+  },
+  "http_load_saturated": {
+    "concurrency": 16,
+    "max_in_flight": 2,
+    "total_requests": 1000,
+    "succeeded": 226,
+    "rejected_429": 774,
+    "timed_out": 0,
+    "other_errors": 0,
+    "throughput_qps": 19584.90402530439,
+    "engine_p50_us": 42.25,
+    "engine_p95_us": 170.792,
+    "http_client_p50_us": 201.042,
+    "http_client_p95_us": 496.708
+  }
+}

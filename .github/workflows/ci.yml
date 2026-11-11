@@ -6,12 +6,14 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test-and-bench:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.22.x"
-      - name: Run tests with race detector
+      - name: Run unit, planner, and race tests
         run: go test -race -v ./...
+      - name: Run small benchmark
+        run: go run ./cmd/bench -scale small

@@ -2,7 +2,7 @@ package vecsearch
 
 import (
 	"cmp"
-	"container/heap"
+	"context"
 	"errors"
 	"fmt"
 	"math"
@@ -18,18 +18,20 @@ var (
 const maxKMeansIterations = 15
 
 // IVFIndex groups corpus vectors around k-means centroids in a contiguous float32
-// arena so queries can scan a fixed number of nearby clusters (nprobe).
+// arena so queries can scan a selected number of nearby clusters (nprobe).
 type IVFIndex struct {
-	dim        int
-	ids        []string
-	categories []string
-	vectors    []float32
-	centroids  []float32 // len = numClusters * dim
-	clusters   [][]int   // clusters[c] holds document indices assigned to centroid c
+	dim               int
+	ids               []string
+	categories        []string
+	vectors           []float32
+	centroids         []float32        // len = numClusters * dim
+	clusters          [][]int          // clusters[c] holds document indices assigned to centroid c
+	categoryHistograms map[string][]int // categoryHistograms[cat][c] holds eligible doc count in cluster c
 }
 
 // NewIVFIndex validates docs, trains deterministic k-means centroids using seed,
-// and partitions documents into inverted lists by nearest centroid.
+// partitions documents into inverted lists by nearest centroid, and precomputes
+// per-centroid category histograms for cluster-aware query planning.
 func NewIVFIndex(dim int, docs []Document, numClusters int, seed uint64) (*IVFIndex, error) {
 	if numClusters <= 0 {
 		return nil, fmt.Errorf("%w: numClusters=%d", ErrInvalidClusterCount, numClusters)
@@ -40,29 +42,41 @@ func NewIVFIndex(dim int, docs []Document, numClusters int, seed uint64) (*IVFIn
 	}
 	if len(docs) == 0 {
 		return &IVFIndex{
-			dim:        dim,
-			ids:        ids,
-			categories: categories,
-			vectors:    vectors,
+			dim:                dim,
+			ids:                ids,
+			categories:         categories,
+			vectors:            vectors,
+			categoryHistograms: make(map[string][]int),
 		}, nil
 	}
 
 	actualClusters := min(numClusters, len(docs))
 	centroids := trainKMeans(dim, vectors, len(docs), actualClusters, seed)
 	clusters := make([][]int, actualClusters)
+	categoryHistograms := make(map[string][]int)
+
 	for docIdx := range len(docs) {
 		vec := vectors[docIdx*dim : (docIdx+1)*dim]
 		c := nearestCentroid(dim, centroids, actualClusters, vec)
 		clusters[c] = append(clusters[c], docIdx)
+
+		cat := categories[docIdx]
+		hist, ok := categoryHistograms[cat]
+		if !ok {
+			hist = make([]int, actualClusters)
+			categoryHistograms[cat] = hist
+		}
+		hist[c]++
 	}
 
 	return &IVFIndex{
-		dim:        dim,
-		ids:        ids,
-		categories: categories,
-		vectors:    vectors,
-		centroids:  centroids,
-		clusters:   clusters,
+		dim:                dim,
+		ids:                ids,
+		categories:         categories,
+		vectors:            vectors,
+		centroids:          centroids,
+		clusters:           clusters,
+		categoryHistograms: categoryHistograms,
 	}, nil
 }
 
@@ -71,9 +85,28 @@ func (idx *IVFIndex) NumClusters() int {
 	return len(idx.clusters)
 }
 
+// ClusterSize returns the total number of documents in cluster c.
+func (idx *IVFIndex) ClusterSize(c int) int {
+	if c < 0 || c >= len(idx.clusters) {
+		return 0
+	}
+	return len(idx.clusters[c])
+}
+
+// CategoryClusterCounts returns the per-centroid document count slice for category,
+// or nil if category does not appear in the corpus.
+func (idx *IVFIndex) CategoryClusterCounts(category string) []int {
+	return idx.categoryHistograms[category]
+}
+
 // SearchPreFilter probes the nprobe nearest clusters to query and scores only
 // documents matching category within those clusters.
 func (idx *IVFIndex) SearchPreFilter(query []float32, category string, k, nprobe int) ([]Result, int, error) {
+	return idx.SearchPreFilterContext(context.Background(), query, category, k, nprobe)
+}
+
+// SearchPreFilterContext probes the nprobe nearest clusters to query with context cancellation.
+func (idx *IVFIndex) SearchPreFilterContext(ctx context.Context, query []float32, category string, k, nprobe int) ([]Result, int, error) {
 	if k <= 0 {
 		return nil, 0, fmt.Errorf("%w: k=%d", ErrInvalidK, k)
 	}
@@ -83,16 +116,31 @@ func (idx *IVFIndex) SearchPreFilter(query []float32, category string, k, nprobe
 	if err := validateVector(idx.dim, query); err != nil {
 		return nil, 0, fmt.Errorf("query: %w", err)
 	}
+	if err := ctx.Err(); err != nil {
+		return nil, 0, err
+	}
 	if len(idx.clusters) == 0 {
 		return []Result{}, 0, nil
 	}
 
-	probeOrder := idx.rankClusters(query, nprobe)
-	h := make(resultMaxHeap, 0, k)
-	evaluated := 0
+	var stackOrder [128]int
+	probeOrder := idx.rankClustersInto(query, nprobe, stackOrder[:0])
+	return idx.searchSelectedClustersContext(ctx, query, category, k, probeOrder)
+}
 
-	for _, c := range probeOrder {
+func (idx *IVFIndex) searchSelectedClustersContext(ctx context.Context, query []float32, category string, k int, clustersToProbe []int) ([]Result, int, error) {
+	results := make([]Result, 0, k)
+	evaluated := 0
+	inspected := 0
+
+	for _, c := range clustersToProbe {
 		for _, docIdx := range idx.clusters[c] {
+			inspected++
+			if inspected&255 == 0 {
+				if err := ctx.Err(); err != nil {
+					return nil, evaluated, err
+				}
+			}
 			if idx.categories[docIdx] != category {
 				continue
 			}
@@ -102,16 +150,15 @@ func (idx *IVFIndex) SearchPreFilter(query []float32, category string, k, nprobe
 				ID:       idx.ids[docIdx],
 				Distance: squaredL2(query, vec),
 			}
-			if len(h) < k {
-				heap.Push(&h, cand)
-			} else if betterResult(cand, h[0]) {
-				h[0] = cand
-				heap.Fix(&h, 0)
+			if len(results) < k {
+				results = pushResultHeap(results, cand)
+			} else if betterResult(cand, results[0]) {
+				results[0] = cand
+				siftDownResultHeap(results, 0)
 			}
 		}
 	}
 
-	results := []Result(h)
 	slices.SortFunc(results, compareResult)
 	return results, evaluated, nil
 }
@@ -120,6 +167,11 @@ func (idx *IVFIndex) SearchPreFilter(query []float32, category string, k, nprobe
 // filter during scoring, retains the global top globalCandidates matches across all
 // categories, and filters by category afterward.
 func (idx *IVFIndex) SearchPostFilter(query []float32, category string, k, nprobe, globalCandidates int) ([]Result, int, error) {
+	return idx.SearchPostFilterContext(context.Background(), query, category, k, nprobe, globalCandidates)
+}
+
+// SearchPostFilterContext executes post-filtered IVF search with context cancellation.
+func (idx *IVFIndex) SearchPostFilterContext(ctx context.Context, query []float32, category string, k, nprobe, globalCandidates int) ([]Result, int, error) {
 	if k <= 0 {
 		return nil, 0, fmt.Errorf("%w: k=%d", ErrInvalidK, k)
 	}
@@ -128,6 +180,9 @@ func (idx *IVFIndex) SearchPostFilter(query []float32, category string, k, nprob
 	}
 	if err := validateVector(idx.dim, query); err != nil {
 		return nil, 0, fmt.Errorf("query: %w", err)
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, 0, err
 	}
 	if len(idx.clusters) == 0 {
 		return []Result{}, 0, nil
@@ -141,10 +196,16 @@ func (idx *IVFIndex) SearchPostFilter(query []float32, category string, k, nprob
 		result Result
 	}
 
-	probeOrder := idx.rankClusters(query, nprobe)
+	var stackOrder [128]int
+	probeOrder := idx.rankClustersInto(query, nprobe, stackOrder[:0])
 	var scored []docCandidate
 	for _, c := range probeOrder {
 		for _, docIdx := range idx.clusters[c] {
+			if len(scored)&255 == 0 && len(scored) > 0 {
+				if err := ctx.Err(); err != nil {
+					return nil, len(scored), err
+				}
+			}
 			vec := idx.vectors[docIdx*idx.dim : (docIdx+1)*idx.dim]
 			scored = append(scored, docCandidate{
 				docIdx: docIdx,
@@ -157,7 +218,8 @@ func (idx *IVFIndex) SearchPostFilter(query []float32, category string, k, nprob
 	}
 	evaluated := len(scored)
 
-	// ponytail: sort probed slice directly for the post-filter baseline; use a bounded heap only if post-filter is run on large nprobe.
+	// Sort the probed candidate slice directly; post-filtering already materializes the
+	// unscored cluster subset, so a full-slice sort avoids maintaining a second heap type.
 	slices.SortFunc(scored, func(a, b docCandidate) int {
 		return compareResult(a.result, b.result)
 	})
@@ -182,9 +244,16 @@ type clusterDistance struct {
 	distance   float64
 }
 
-func (idx *IVFIndex) rankClusters(query []float32, nprobe int) []int {
+func (idx *IVFIndex) rankClustersInto(query []float32, nprobe int, dst []int) []int {
 	numClusters := len(idx.clusters)
-	ranked := make([]clusterDistance, numClusters)
+	var stackRanked [128]clusterDistance
+	var ranked []clusterDistance
+	if numClusters <= len(stackRanked) {
+		ranked = stackRanked[:numClusters]
+	} else {
+		ranked = make([]clusterDistance, numClusters)
+	}
+
 	for c := range numClusters {
 		centroid := idx.centroids[c*idx.dim : (c+1)*idx.dim]
 		ranked[c] = clusterDistance{
@@ -200,11 +269,10 @@ func (idx *IVFIndex) rankClusters(query []float32, nprobe int) []int {
 	})
 
 	limit := min(nprobe, numClusters)
-	out := make([]int, limit)
 	for i := range limit {
-		out[i] = ranked[i].clusterIdx
+		dst = append(dst, ranked[i].clusterIdx)
 	}
-	return out
+	return dst
 }
 
 // RecallAtK computes the fraction of exact eligible top-k results recovered by approx.

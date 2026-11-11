@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 480" width="820" height="480" font-family="system-ui, -apple-system, sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="410" y="30" text-anchor="middle" font-size="16" font-weight="600" fill="#111827">Filtered Vector Search (N=20000, d=64, C=64): p95 Latency vs. Recall@10</text>
+<line x1="75.0" y1="55" x2="75.0" y2="415" stroke="#e5e7eb" stroke-width="1"/>
+<text x="75.0" y="435" text-anchor="middle" font-size="11" fill="#4b5563">0.0</text>
+<line x1="216.0" y1="55" x2="216.0" y2="415" stroke="#e5e7eb" stroke-width="1"/>
+<text x="216.0" y="435" text-anchor="middle" font-size="11" fill="#4b5563">0.2</text>
+<line x1="357.0" y1="55" x2="357.0" y2="415" stroke="#e5e7eb" stroke-width="1"/>
+<text x="357.0" y="435" text-anchor="middle" font-size="11" fill="#4b5563">0.4</text>
+<line x1="498.0" y1="55" x2="498.0" y2="415" stroke="#e5e7eb" stroke-width="1"/>
+<text x="498.0" y="435" text-anchor="middle" font-size="11" fill="#4b5563">0.6</text>
+<line x1="639.0" y1="55" x2="639.0" y2="415" stroke="#e5e7eb" stroke-width="1"/>
+<text x="639.0" y="435" text-anchor="middle" font-size="11" fill="#4b5563">0.8</text>
+<line x1="780.0" y1="55" x2="780.0" y2="415" stroke="#e5e7eb" stroke-width="1"/>
+<text x="780.0" y="435" text-anchor="middle" font-size="11" fill="#4b5563">1.0</text>
+<line x1="75" y1="415.0" x2="780" y2="415.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="67" y="419.0" text-anchor="end" font-size="11" fill="#4b5563">0</text>
+<line x1="75" y1="343.0" x2="780" y2="343.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="67" y="347.0" text-anchor="end" font-size="11" fill="#4b5563">234</text>
+<line x1="75" y1="271.0" x2="780" y2="271.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="67" y="275.0" text-anchor="end" font-size="11" fill="#4b5563">469</text>
+<line x1="75" y1="199.0" x2="780" y2="199.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="67" y="203.0" text-anchor="end" font-size="11" fill="#4b5563">703</text>
+<line x1="75" y1="127.0" x2="780" y2="127.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="67" y="131.0" text-anchor="end" font-size="11" fill="#4b5563">938</text>
+<line x1="75" y1="55.0" x2="780" y2="55.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="67" y="59.0" text-anchor="end" font-size="11" fill="#4b5563">1172</text>
+<line x1="75" y1="415" x2="780" y2="415" stroke="#374151" stroke-width="1.5"/>
+<line x1="75" y1="55" x2="75" y2="415" stroke="#374151" stroke-width="1.5"/>
+<text x="410" y="462" text-anchor="middle" font-size="13" font-weight="500" fill="#1f2937">Recall@10 (Held-Out Queries)</text>
+<text x="20" y="240" text-anchor="middle" font-size="13" font-weight="500" fill="#1f2937" transform="rotate(-90 20 240)">p95 Query Latency (µs)</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="590.8,403.2 641.2,395.5 665.9,378.2 697.6,350.3 716.8,327.8 740.6,305.6 766.8,267.5 777.8,234.5 780.0,110.4"/>
+<circle cx="590.8" cy="403.2" r="4" fill="#2563eb"/>
+<circle cx="641.2" cy="395.5" r="4" fill="#2563eb"/>
+<circle cx="665.9" cy="378.2" r="4" fill="#2563eb"/>
+<circle cx="697.6" cy="350.3" r="4" fill="#2563eb"/>
+<circle cx="716.8" cy="327.8" r="4" fill="#2563eb"/>
+<circle cx="740.6" cy="305.6" r="4" fill="#2563eb"/>
+<circle cx="766.8" cy="267.5" r="4" fill="#2563eb"/>
+<circle cx="777.8" cy="234.5" r="4" fill="#2563eb"/>
+<circle cx="780.0" cy="110.4" r="4" fill="#2563eb"/>
+<polyline fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="5,4" points="330.7,193.0 475.4,201.2 526.9,202.0 567.6,194.0 621.2,201.7 680.0,203.7"/>
+<circle cx="330.7" cy="193.0" r="3.5" fill="#6b7280"/>
+<circle cx="475.4" cy="201.2" r="3.5" fill="#6b7280"/>
+<circle cx="526.9" cy="202.0" r="3.5" fill="#6b7280"/>
+<circle cx="567.6" cy="194.0" r="3.5" fill="#6b7280"/>
+<circle cx="621.2" cy="201.7" r="3.5" fill="#6b7280"/>
+<circle cx="680.0" cy="203.7" r="3.5" fill="#6b7280"/>
+<circle cx="709.4" cy="379.3" r="6.5" fill="#d97706" stroke="#ffffff" stroke-width="1.5"/>
+<text x="664.4" y="367.3" font-size="11" font-weight="600" fill="#d97706">SizeOnly (0.90, 116µs)</text>
+<circle cx="764.3" cy="389.5" r="6.5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="719.3" y="407.5" font-size="11" font-weight="600" fill="#16a34a">ClusterAware (0.98, 83µs)</text>
+<circle cx="780.0" cy="102.0" r="6.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.5"/>
+<text x="735.0" y="90.0" font-size="11" font-weight="600" fill="#dc2626">Exact (1.00, 1020µs)</text>
+<rect x="90" y="65" width="235" height="92" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
+<line x1="100" y1="83" x2="123" y2="83" stroke="#2563eb" stroke-width="2.2"/><text x="130" y="87" font-size="11" fill="#1f2937">IVF Pre-Filter (nprobe sweep)</text>
+<line x1="100" y1="103" x2="123" y2="103" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3"/><text x="130" y="107" font-size="11" fill="#1f2937">IVF Post-Filter (top-M sweep)</text>
+<circle cx="111" cy="123" r="5" fill="#d97706"/><text x="130" y="127" font-size="11" fill="#1f2937">Size-Only Planner</text>
+<circle cx="111" cy="143" r="5" fill="#16a34a"/><text x="130" y="147" font-size="11" fill="#1f2937">Cluster-Aware Planner</text>
+</svg>
