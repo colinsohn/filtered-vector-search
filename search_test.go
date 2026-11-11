@@ -335,3 +335,192 @@ func TestSeededWorkloadMatchesBruteForce(t *testing.T) {
 		}
 	}
 }
+
+func TestIVFTooFewClustersMissesMatch(t *testing.T) {
+	// Left cluster [-3.0, -0.1, 0.0, 0.1] has centroid (-0.75, 0).
+	// Right cluster [6.5, 10.0, 10.0, 10.0] has centroid (9.125, 0).
+	// Query (4.0, 0) is closer to the left centroid (distSq=22.56) than the right centroid (distSq=26.27),
+	// so nprobe=1 only scans the left cluster and returns "rare-far-in-left" at (-3.0, 0) (distSq=49.0),
+	// missing "rare-true-nearest" at (6.5, 0) in the right cluster (distSq=6.25).
+	docs := []Document{
+		{ID: "common-L1", Category: "books", Vector: []float32{0.0, 0.0}},
+		{ID: "common-L2", Category: "books", Vector: []float32{0.1, 0.0}},
+		{ID: "common-L3", Category: "books", Vector: []float32{-0.1, 0.0}},
+		{ID: "rare-far-in-left", Category: "rare", Vector: []float32{-3.0, 0.0}},
+		{ID: "common-R1", Category: "books", Vector: []float32{10.0, 0.0}},
+		{ID: "common-R2", Category: "books", Vector: []float32{10.0, 0.0}},
+		{ID: "common-R3", Category: "books", Vector: []float32{10.0, 0.0}},
+		{ID: "rare-true-nearest", Category: "rare", Vector: []float32{6.5, 0.0}},
+	}
+	query := []float32{4.0, 0.0}
+
+	exactIdx, err := NewExactIndex(2, docs)
+	if err != nil {
+		t.Fatalf("NewExactIndex failed: %v", err)
+	}
+	ivfIdx, err := NewIVFIndex(2, docs, 2, 7)
+	if err != nil {
+		t.Fatalf("NewIVFIndex failed: %v", err)
+	}
+
+	exactRes, err := exactIdx.Search(query, "rare", 1)
+	if err != nil {
+		t.Fatalf("ExactIndex.Search failed: %v", err)
+	}
+	if len(exactRes) != 1 || exactRes[0].ID != "rare-true-nearest" {
+		t.Fatalf("expected exact winner rare-true-nearest, got %+v", exactRes)
+	}
+
+	probe1Res, eval1, err := ivfIdx.SearchPreFilter(query, "rare", 1, 1)
+	if err != nil {
+		t.Fatalf("SearchPreFilter(nprobe=1) failed: %v", err)
+	}
+	recall1, _ := RecallAtK(exactRes, probe1Res)
+	if recall1 != 0.0 || len(probe1Res) != 1 || probe1Res[0].ID != "rare-far-in-left" {
+		t.Fatalf("expected nprobe=1 to miss rare-true-nearest and return rare-far-in-left, got %+v (recall=%v)", probe1Res, recall1)
+	}
+
+	probe2Res, eval2, err := ivfIdx.SearchPreFilter(query, "rare", 1, 2)
+	if err != nil {
+		t.Fatalf("SearchPreFilter(nprobe=2) failed: %v", err)
+	}
+	recall2, _ := RecallAtK(exactRes, probe2Res)
+	assertSameResults(t, probe2Res, exactRes)
+	if recall2 != 1.0 {
+		t.Fatalf("expected nprobe=2 recall=1.0, got %v", recall2)
+	}
+
+	t.Logf("Boundary miss verified: query=%v exact=%s(dist=%.2f) | nprobe=1 -> %s(dist=%.2f, eval=%d, recall=%.2f) | nprobe=2 -> %s(dist=%.2f, eval=%d, recall=%.2f)",
+		query,
+		exactRes[0].ID, exactRes[0].Distance,
+		probe1Res[0].ID, probe1Res[0].Distance, eval1, recall1,
+		probe2Res[0].ID, probe2Res[0].Distance, eval2, recall2)
+}
+
+func TestIVFSeededWorkloadRecallAndExhaustiveParity(t *testing.T) {
+	const (
+		numDocs     = 1000
+		numQueries  = 60
+		dim         = 16
+		numClusters = 16
+		k           = 10
+	)
+	wl := NewSeededWorkload(42, numDocs, numQueries, dim)
+
+	exactIdx, err := NewExactIndex(wl.Dim, wl.Docs)
+	if err != nil {
+		t.Fatalf("NewExactIndex failed: %v", err)
+	}
+	ivfIdx, err := NewIVFIndex(wl.Dim, wl.Docs, numClusters, 42)
+	if err != nil {
+		t.Fatalf("NewIVFIndex failed: %v", err)
+	}
+
+	probes := []int{1, 2, 4, 8, numClusters}
+	prevMeanRecall := -1.0
+	loggedSeededMiss := false
+
+	for _, nprobe := range probes {
+		var totalRecall float64
+		var nonEmptyCount int
+		var totalEval int
+		var underfilled int
+
+		for qIdx, q := range wl.Queries {
+			for _, cat := range wl.Categories {
+				exactRes, _, err := exactIdx.SearchWithStats(q, cat, k)
+				if err != nil {
+					t.Fatalf("exact search failed: %v", err)
+				}
+				approxRes, eval, err := ivfIdx.SearchPreFilter(q, cat, k, nprobe)
+				if err != nil {
+					t.Fatalf("ivf pre-filter search failed: %v", err)
+				}
+
+				if nprobe == numClusters {
+					assertSameResults(t, approxRes, exactRes)
+				}
+
+				rec, empty := RecallAtK(exactRes, approxRes)
+				if !empty {
+					totalRecall += rec
+					nonEmptyCount++
+				}
+				if len(exactRes) == k && len(approxRes) < k {
+					underfilled++
+				}
+				totalEval += eval
+
+				if nprobe == 1 && !loggedSeededMiss && !empty && rec < 1.0 && len(approxRes) > 0 {
+					loggedSeededMiss = true
+					t.Logf("Seeded workload miss at nprobe=1 (query=%d, category=%q, k=%d): recall=%.2f, exact[0]=%s(dist=%.2f) vs approx[0]=%s(dist=%.2f)",
+						qIdx, cat, k, rec, exactRes[0].ID, exactRes[0].Distance, approxRes[0].ID, approxRes[0].Distance)
+				}
+			}
+		}
+
+		meanRecall := totalRecall / float64(nonEmptyCount)
+		meanEval := float64(totalEval) / float64(nonEmptyCount)
+		t.Logf("IVF Pre-Filter nprobe=%2d/%d: mean recall@%d = %.4f, mean candidates scored = %5.1f, underfilled = %d/%d",
+			nprobe, numClusters, k, meanRecall, meanEval, underfilled, nonEmptyCount)
+
+		if meanRecall+1e-9 < prevMeanRecall {
+			t.Fatalf("expected non-decreasing recall with nprobe: nprobe=%d got %.4f < %.4f", nprobe, meanRecall, prevMeanRecall)
+		}
+		prevMeanRecall = meanRecall
+
+		if nprobe == numClusters && math.Abs(meanRecall-1.0) > 1e-9 {
+			t.Fatalf("expected 1.0 recall when probing all clusters, got %.6f", meanRecall)
+		}
+	}
+
+	// Compare global post-filtering at nprobe=4 on rare category ("rare_vintage").
+	var preRareRecall, postRareRecall float64
+	var preRareUnderfilled, postRareUnderfilled int
+	for _, q := range wl.Queries {
+		exactRes, _ := exactIdx.Search(q, "rare_vintage", k)
+		preRes, _, _ := ivfIdx.SearchPreFilter(q, "rare_vintage", k, 4)
+		postRes, _, _ := ivfIdx.SearchPostFilter(q, "rare_vintage", k, 4, k)
+		rPre, _ := RecallAtK(exactRes, preRes)
+		rPost, _ := RecallAtK(exactRes, postRes)
+		preRareRecall += rPre
+		postRareRecall += rPost
+		if len(exactRes) == k && len(preRes) < k {
+			preRareUnderfilled++
+		}
+		if len(exactRes) == k && len(postRes) < k {
+			postRareUnderfilled++
+		}
+	}
+	preRareRecall /= float64(len(wl.Queries))
+	postRareRecall /= float64(len(wl.Queries))
+	t.Logf("Rare category (%q, nprobe=4, k=%d): pre-filter recall=%.4f (underfilled=%d/%d) vs post-filter(top-%d) recall=%.4f (underfilled=%d/%d)",
+		"rare_vintage", k, preRareRecall, preRareUnderfilled, len(wl.Queries), k, postRareRecall, postRareUnderfilled, len(wl.Queries))
+	if preRareRecall <= postRareRecall {
+		t.Fatalf("expected pre-filter recall (%.4f) to beat global top-k post-filter recall (%.4f) on rare category", preRareRecall, postRareRecall)
+	}
+}
+
+func TestIVFValidation(t *testing.T) {
+	docs := []Document{{ID: "d1", Category: "a", Vector: []float32{1, 2}}}
+	if _, err := NewIVFIndex(0, docs, 2, 1); !errors.Is(err, ErrInvalidDimension) {
+		t.Fatalf("expected ErrInvalidDimension, got %v", err)
+	}
+	if _, err := NewIVFIndex(2, docs, 0, 1); !errors.Is(err, ErrInvalidClusterCount) {
+		t.Fatalf("expected ErrInvalidClusterCount, got %v", err)
+	}
+	idx, err := NewIVFIndex(2, docs, 4, 1)
+	if err != nil {
+		t.Fatalf("NewIVFIndex failed: %v", err)
+	}
+	if idx.NumClusters() != 1 {
+		t.Fatalf("expected NumClusters clamped to 1, got %d", idx.NumClusters())
+	}
+	if _, _, err := idx.SearchPreFilter([]float32{1, 2}, "a", 1, 0); !errors.Is(err, ErrInvalidNProbe) {
+		t.Fatalf("expected ErrInvalidNProbe, got %v", err)
+	}
+	if _, _, err := idx.SearchPostFilter([]float32{1, 2}, "a", 1, 0, 5); !errors.Is(err, ErrInvalidNProbe) {
+		t.Fatalf("expected ErrInvalidNProbe, got %v", err)
+	}
+}
+

@@ -42,30 +42,14 @@ type ExactIndex struct {
 
 // NewExactIndex validates the corpus and builds an immutable exact filtered search index.
 func NewExactIndex(dim int, docs []Document) (*ExactIndex, error) {
-	if dim <= 0 {
-		return nil, fmt.Errorf("%w: dim=%d", ErrInvalidDimension, dim)
+	ids, categories, vectors, err := validateAndCopyCorpus(dim, docs)
+	if err != nil {
+		return nil, err
 	}
 
-	seen := make(map[string]struct{}, len(docs))
-	ids := make([]string, len(docs))
-	vectors := make([]float32, len(docs)*dim)
 	byCategory := make(map[string][]int)
-
-	for i, doc := range docs {
-		if doc.ID == "" {
-			return nil, fmt.Errorf("%w at index %d", ErrEmptyID, i)
-		}
-		if _, exists := seen[doc.ID]; exists {
-			return nil, fmt.Errorf("%w: %q", ErrDuplicateID, doc.ID)
-		}
-		if err := validateVector(dim, doc.Vector); err != nil {
-			return nil, fmt.Errorf("doc %q: %w", doc.ID, err)
-		}
-
-		seen[doc.ID] = struct{}{}
-		ids[i] = doc.ID
-		copy(vectors[i*dim:(i+1)*dim], doc.Vector)
-		byCategory[doc.Category] = append(byCategory[doc.Category], i)
+	for i, cat := range categories {
+		byCategory[cat] = append(byCategory[cat], i)
 	}
 
 	return &ExactIndex{
@@ -76,18 +60,55 @@ func NewExactIndex(dim int, docs []Document) (*ExactIndex, error) {
 	}, nil
 }
 
+func validateAndCopyCorpus(dim int, docs []Document) ([]string, []string, []float32, error) {
+	if dim <= 0 {
+		return nil, nil, nil, fmt.Errorf("%w: dim=%d", ErrInvalidDimension, dim)
+	}
+
+	seen := make(map[string]struct{}, len(docs))
+	ids := make([]string, len(docs))
+	categories := make([]string, len(docs))
+	vectors := make([]float32, len(docs)*dim)
+
+	for i, doc := range docs {
+		if doc.ID == "" {
+			return nil, nil, nil, fmt.Errorf("%w at index %d", ErrEmptyID, i)
+		}
+		if _, exists := seen[doc.ID]; exists {
+			return nil, nil, nil, fmt.Errorf("%w: %q", ErrDuplicateID, doc.ID)
+		}
+		if err := validateVector(dim, doc.Vector); err != nil {
+			return nil, nil, nil, fmt.Errorf("doc %q: %w", doc.ID, err)
+		}
+
+		seen[doc.ID] = struct{}{}
+		ids[i] = doc.ID
+		categories[i] = doc.Category
+		copy(vectors[i*dim:(i+1)*dim], doc.Vector)
+	}
+
+	return ids, categories, vectors, nil
+}
+
 // Search returns up to k closest documents in category ordered by (Distance ASC, ID ASC).
 func (idx *ExactIndex) Search(query []float32, category string, k int) ([]Result, error) {
+	results, _, err := idx.SearchWithStats(query, category, k)
+	return results, err
+}
+
+// SearchWithStats returns up to k closest documents in category along with the
+// number of candidate document vectors scored.
+func (idx *ExactIndex) SearchWithStats(query []float32, category string, k int) ([]Result, int, error) {
 	if k <= 0 {
-		return nil, fmt.Errorf("%w: k=%d", ErrInvalidK, k)
+		return nil, 0, fmt.Errorf("%w: k=%d", ErrInvalidK, k)
 	}
 	if err := validateVector(idx.dim, query); err != nil {
-		return nil, fmt.Errorf("query: %w", err)
+		return nil, 0, fmt.Errorf("query: %w", err)
 	}
 
 	postings := idx.byCategory[category]
 	if len(postings) == 0 {
-		return []Result{}, nil
+		return []Result{}, 0, nil
 	}
 
 	target := min(k, len(postings))
@@ -109,7 +130,7 @@ func (idx *ExactIndex) Search(query []float32, category string, k int) ([]Result
 
 	results := []Result(h)
 	slices.SortFunc(results, compareResult)
-	return results, nil
+	return results, len(postings), nil
 }
 
 func validateVector(dim int, vec []float32) error {
@@ -169,13 +190,23 @@ type SeededWorkload struct {
 	Queries    [][]float32
 }
 
-// NewSeededWorkload generates a deterministic synthetic corpus with skewed category
-// sizes and queries for testing and baseline verification.
+// NewSeededWorkload generates a deterministic synthetic corpus around latent
+// cluster centers with skewed category sizes and queries for baseline and recall verification.
 func NewSeededWorkload(seed uint64, numDocs, numQueries, dim int) SeededWorkload {
 	rng := rand.New(rand.NewPCG(seed, seed^0x9e3779b97f4a7c15))
 	categories := []string{"electronics", "books", "home", "apparel", "rare_vintage"}
 	// Skewed weights: electronics (45%), books (25%), home (18%), apparel (10%), rare_vintage (2%)
 	cumWeights := []float64{0.45, 0.70, 0.88, 0.98, 1.00}
+
+	const numCenters = 12
+	centers := make([][]float32, numCenters)
+	for c := range numCenters {
+		center := make([]float32, dim)
+		for j := range dim {
+			center[j] = float32(rng.NormFloat64() * 4.0)
+		}
+		centers[c] = center
+	}
 
 	docs := make([]Document, numDocs)
 	for i := range numDocs {
@@ -187,9 +218,10 @@ func NewSeededWorkload(seed uint64, numDocs, numQueries, dim int) SeededWorkload
 				break
 			}
 		}
+		center := centers[rng.IntN(numCenters)]
 		vec := make([]float32, dim)
 		for j := range dim {
-			vec[j] = float32(rng.NormFloat64())
+			vec[j] = center[j] + float32(rng.NormFloat64()*0.75)
 		}
 		docs[i] = Document{
 			ID:       fmt.Sprintf("doc-%05d", i),
@@ -200,9 +232,10 @@ func NewSeededWorkload(seed uint64, numDocs, numQueries, dim int) SeededWorkload
 
 	queries := make([][]float32, numQueries)
 	for i := range numQueries {
+		center := centers[rng.IntN(numCenters)]
 		q := make([]float32, dim)
 		for j := range dim {
-			q[j] = float32(rng.NormFloat64())
+			q[j] = center[j] + float32(rng.NormFloat64()*0.75)
 		}
 		queries[i] = q
 	}
